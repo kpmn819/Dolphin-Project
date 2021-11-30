@@ -8,15 +8,10 @@
 # V9 mouse clicks good tried to center text, no good
 # V10 working version, need to add escape timeout
 # V11 larger pictures in graphics folder
-# V12 got time_out delay working had to extend to 40 seconds so as not to time out early
-# V13 added drop shadow, for now it is fixed at 3 but could be passed to font_process
-# V15 adding pay input
-# V16 cleaned up polling for free vs pay input
-# V16 now under GIT control
 
 # IMPORTS START --------------------------------------------------
 # makes extensive use of pygame to blit the screen
-from random import randrange, shuffle, random
+from random import randrange, shuffle
 from time import sleep, time
 import sys, pygame
 from pygame.locals import *
@@ -34,26 +29,12 @@ max_pic = 5
 rnums = []
 display_pic = 0
 resp = 0
-Free = False # playing for free flag
-Win = False # winner flag
-PayOut = 2 # percentage of losers
-image_centerx = 960
-image_centery = 540
+
 
 
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
-    # Define Ports if PortList starts with a 0 it is output
-    # if it starts with a 1 it is input
-# Port assignments 1 [in,4-B1,17-B2,27-B3,22-B4,5-B5,6-Rst]
-PortList = [1,4,17,27,22,5,6]
-# Port assignments 2 [in,13-Free,26-Pay]
-PortList2 = [1,13,26]
-# Port assignments 3 [out, 23-Bell]
-PortList3 = [0, 23]
-
-
 
 # GPIO PORT END ___________________________________________________
 
@@ -66,24 +47,6 @@ PortList3 = [0, 23]
 def init():
     # initialize code can go here
     pass
-
-def portassign(ports):
-    # assign ports based on index[0] if 0 Output else Input
-    
-    if ports[0] == 0:
-        print('Output')
-        for index in range(1, len(ports)):
-            GPIO.setup(ports[index], GPIO.OUT)
-            
-            print(ports[index])
-    else:
-        print('Input')
-        for index in range(1, len(ports)):
-            GPIO.setup(ports[index], GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            print(ports[index])
-            
-
-
 
 
 def shuffle_pics():
@@ -102,84 +65,54 @@ def shuffle_pics():
 def show_rules():
     # display rules and wait for input
     # define font colors
-    global Free
-    global Win
     white = (255, 255, 255)
     black = (0, 0, 0,)
     red = (255, 50, 50)
     display.blit(bg_dol, (0, 0))
-    greeting = 'Press Start for free play or insert donation for a prize chance'
-    font_process(60, greeting, white, 100, 100)
+    greeting = 'Tap screen to play'
+    font_process(40, greeting, white, 100, 100)
     pygame.display.flip()
-    
-    # Select if this is a paid or free play
-    while GPIO.input(PortList2[1]) == GPIO.HIGH and GPIO.input(PortList2[2]) == GPIO.HIGH:
-        sleep(.05)
-        #print('in pay detection')
-        if GPIO.input(PortList2[1]) == GPIO.LOW:
-            sleep(.08)
-            Free = True
-            Win = False
-            print('Free Play')
-                
-        if GPIO.input(PortList2[2]) == GPIO.LOW:
-            print('PLAYBACK SHOULD HAPPEN')
-            sleep(.08)
-            Free = False
-            Win = False # set it false for now
-            Rnd_Chance = int(random() * 100 )
-            pygame.mixer.music.set_volume(.5)
-            pygame.mixer.music.load(gpath + 'Yay.mp3')
-            pygame.mixer.music.play()
-            if Rnd_Chance >= PayOut:
-                Win = True
-                print('A Winner')
-                
-            else:
-                Win = False
-                print('Winner false = ', Win)
-                print('A Loser')
-            
- 
+    # pause screen here
+    while True:
+        event = pygame.event.wait()
+        click_spot = (801, 481)
+        # if any mouse button is pressed
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            click_spot =(pygame.mouse.get_pos() [0], pygame.mouse.get_pos() [1])
+
+        if 0 <= click_spot[0] <= 800 and 0 <= click_spot[1] <= 480:
+            break  #  click anywhere to continue
+
+
     display.blit(bg_dol, (0, 0))
     greeting = 'Hello Welcome to ID the Dolphin'
-    font_process(60, greeting, white, 100, 100)
+    font_process(40, greeting, white, 100, 100)
     pygame.display.flip()
     sleep(2)
 
     info = 'We can identify individuals by their dorsal fin shape'
-    font_process(50, info, white, 100, 200)
+    font_process(25, info, white, 100, 150)
     pygame.display.flip()
-    sleep(.5)
+    sleep(4)
 
-    inst = 'See if you can match one on the bottom row to the top picture'
-    font_process(50, inst, white, 30, 300)
+    inst = 'See if you can match one on the top row to the bottom picture'
+    font_process(25, inst, white, 30, 175)
     pygame.display.flip()
-    sleep(5)
+    sleep(6)
     display.blit(bg_dol, (0, 0))
     pygame.display.flip()
 
-
 def font_process(size, message, color, x, y):
     # attempt to combine all font operations into one call that
-    # renders and blits the text
-    
-    black = (0,0,0)
-    d_shadow = 3
+    # and blits the text
+
     font = pygame.font.SysFont('FreeSans', size, True, False)
     render_message = font.render(message, True, color)
-    if d_shadow:
-        render_ds = font.render(message, True, black)
-        render_ds_rect = render_message.get_rect()
     # attempt to center works
     render_msg_rect = render_message.get_rect()
     render_cent = render_msg_rect[1]
-
-    render_msg_rect.center = (image_centerx, y) # (x,y) x = screen center
-
-    if d_shadow:
-        render_ds_rect.center = (image_centerx + d_shadow, y + d_shadow)
-        display.blit(render_ds, render_ds_rect)
+    #print('render center =' + str(render_cent))
+    render_msg_rect.center = (400, y)
     display.blit(render_message, render_msg_rect)
 
 def play_loop():
@@ -189,108 +122,58 @@ def play_loop():
     right_ans = 0  # scoring
     wrong_ans = 0  # scoring
     white = (255, 255, 255)
-    red = (255, 0, 0)
     turn = 0  # used to access comp_pic
-    display_pics = [x for x in range(max_pic)]  # this is a random list of the computer pics
-    shuffle(display_pics)  # scramble them these are the index numbers 
-    # use display_pic to put up that pic on top (chalange pic)
-    # use rnums to show all pics on bottom (computer pics)
+    display_pics = [x for x in range(max_pic)]  # this is a random list of the left pic
+    shuffle(display_pics)  # scramble them these are the index numbers for
+    # use display_pic to put up that pic on left
+    # use rnums to show all pics on right
     for items in rnums:
         shuffle_pics()
         display_pic = display_pics[turn]  # picks a new one each turn
+        # need to blit the screen with all the pics here possible caption Round 1 etc
         send_to_screen(display_pic, rnums, 'Testing')  # put up the challenge screen
 
-        #  go get user response
-        resp = which_pic2() #  go and wait for button input return pic#
-        print('back from which pic resp= '+ str(resp) + ' for pic# ' + str(display_pic))
+        #resp = int(input('Make Selection -- Display Pic = '+ str(display_pic)+'  Choices '+ str(rnums)))
+        resp = which_pic() #  go and wait for proper mouse input return pic#
+        print('back from which pic resp= '+ str(resp))
 
-        if resp == -1:
-            score_msg = ('Delay Timeout')
-            break
 
         if rnums[resp] == display_pic:
             pgm_rsp = pos_resp[randrange(len(pos_resp))]
             right_ans = right_ans + 1
-            print(pgm_rsp)
+            #print(pgm_rsp)
         else:
             pgm_rsp = neg_resp[randrange(len(neg_resp))]
-            print(pgm_rsp)
+            #print(pgm_rsp)
             wrong_ans = wrong_ans + 1
         score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
 
-        # clear screen of old score and put up new one
+        # clear screen of old score
         display.blit(bg_dol, (0, 0))
-        font_process(60, score_msg, white, 500, 500)
-        font_process(60, pgm_rsp, white, 500, 550)
+        font_process(40, score_msg, white, 100, 200)
+        font_process(40, pgm_rsp, white, 100, 250)
         turn = turn + 1
-
     # final score
-    score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
     final_msg = (final_resp[right_ans])
     display.blit(bg_dol, (0, 0))
-    font_process(60, score_msg, white, 100, 400)
-    font_process(60, final_msg, white, 100, 500)
-    if Win == True:
-        font_process(75,'You are a WINNER please see Keith for your prize',red, 100, 600)
-        pygame.mixer.music.set_volume(1)
-        pygame.mixer.music.load(gpath + 'fanfare.mp3')
-        pygame.mixer.music.play()
-
+    font_process(40, score_msg, white, 100, 200)
+    font_process(60, final_msg, white, 100, 300)
     pygame.display.flip()
 
     #  add delay here
     sleep(5)
 
-def which_pic2():
-    # this version uses the push buttons instead of touch screen
-    # decided to do it as a polling loop rather than interrupts
-    start_time = time()
-    end_time = time()
-    ans = -1 # this value will be set and returned to Play_Loop
-    while end_time - start_time < 10: # delay in seconds till loop ends
-        end_time = time()
-        # run through all assigned pins
-        # we start with an index of 1 to skip the Input/Output selector
-        for index in range(1, len(PortList)):
-            sleep(.03) # debounce time
-            if GPIO.input(PortList[index]) == GPIO.LOW:
-                ans = PortList[index] # first pull the value
-                ans = PortList.index(PortList[index]) -1 # then locate it in the list
-                print('Button Press: ',str(ans))
-                # special case to reset DOESN'T WORK
-                if ans == 5:
-                    ans = -1
-        if ans in range(0, 5):
-            break #  get out of loop
-            
-
-    return ans
-
-
-
 def which_pic():
     while True:
         #  find out where the mouse/touch happened and return value
         #  this is an endless loop until right input
-        #  legacy code from touch screen, no longer used
         event = pygame.event.wait()
         ans = -1
         click_spot = (0, 0)
-        #  setting a timer here so if they walk away it will cycle through
-        #  and reset
-        time_out = pygame.USEREVENT
-        pygame.time.set_timer(time_out, 40000) #  40 seconds
-        # if idle for too long bail out
-        #  PROBLEM SCORE AFTER TIME OUT IS NOT RESET STARTS WITH FIRST TURN
-        if event.type == time_out:
-            print('time out happened')
-            ans = 0
-            break
-        #  press or touch mouse
+        # if any mouse button is pressed
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_spot =(pygame.mouse.get_pos() [0], pygame.mouse.get_pos() [1])
-            pygame.event.clear() #  flush out any time_out events
-
 
         if 5  <= click_spot[0] <= 155 and 40 <= click_spot[1] <= 190:
             print('selected 0')
@@ -316,30 +199,40 @@ def which_pic():
     return ans
 
 
-def send_to_screen(display_me, rnums, caption):
+def send_to_screen(left_pic, rnums, caption):
 
-    # display_pic is challenge picture
+    # left_pic is the still on the left (bottom), right_pics (top) is a list, caption a string
     # should do the background graphic here
     your_pic = [uw1, uw2, uw3, uw4, uw5]
     comp_pic = [cw1, cw2, cw3, cw4, cw5]
 
     # display the challenge pic
-    display.blit(comp_pic[display_me],(840,10)) # Challange pic location
-    # display the other pictures from list on bottom
-    choicesx = 50
-    choicesy = 700
+    display.blit(comp_pic[left_pic],(325,300))
+    # display the other pictures from list on top (was right)
+    rightx = 5
+    righty = 20
     i = 0
     #print('send to screen has rnums as ', str(rnums))
     for items in rnums:
+
         # use the rnums list to index your_pic list to get the pictures
-        display.blit(your_pic[rnums[i]],(choicesx, choicesy))
+        display.blit(your_pic[rnums[i]],(rightx, righty))
         i = i + 1
-        choicesx = choicesx + 380 # spacing for choices pics
+        rightx = rightx + 160
 
 
     pygame.display.flip()
 
 
+def score():
+    # for one less than the max
+    # display score x of y and random encouragement
+
+    global display_pic
+    global rnums
+    global resp
+    # when max is reached display final score
+    pass
 
 # METHODS AND FUNCTIONS END _________________________________________
 # ///////////////////////////////////////////////////////////////////
@@ -347,28 +240,17 @@ def send_to_screen(display_me, rnums, caption):
 
 # INITIALIZE RUN ONCE CODE START ------------------------------------
 pygame.init()
-pygame.mixer.init()
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 clock = pygame.time.Clock()
-screen_width = 1920
-screen_height = 1080
+screen_width = 800
+screen_height = 480
 bgColor = (0,0,0)
 size = (screen_width, screen_height)
-
-# assign I/O ports
-portassign(PortList) # main buttons
-portassign(PortList2) # free or pay
-portassign(PortList3) # output for bell relay
-
-# for developement uncomment the line below
 #display = pygame.display.set_mode(size)
-# for autostart to work properly uncomment the line below
-#display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-display = pygame.display.set_mode((1920,1080))
+display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
 pygame.display.set_caption('ID The Dolphin')
-pygame.mixer.music.set_volume(1.0)
 # load the pics 'c' for computer 'u' for user
 gpath = '/home/pi/MyCode/graphics/'
 udol1 = gpath + '1dol.jpg'
@@ -382,9 +264,6 @@ cdol3 = gpath + '3dol3.jpg'
 cdol4 = gpath + '4dol4.jpg'
 cdol5 = gpath + '5dol5.jpg'
 bg_dolphins = gpath + 'dolphins3.jpg'
-# path to sounds
-awefile = gpath + 'Awe.mp3'
-yayfile = gpath + 'Yay.mp3'
 # now to actually load them same letters this has to be done in two steps
 uw1 = pygame.image.load(udol1).convert_alpha()
 uw2 = pygame.image.load(udol2).convert_alpha()
@@ -399,7 +278,6 @@ cw5 = pygame.image.load(cdol5).convert_alpha()
 bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 # these lists point to the picture files, there are 5 matching pairs
 # currently they are the same pictures but will be replaced
-# load sounds
 
 
 # INITIALIZE RUN ONCE CODE END _________________________________________
@@ -414,8 +292,7 @@ def main():
             print('Main Program')
             show_rules()
             shuffle_pics()
-            play_loop() # this is where all the work is done might want to break it up
-
+            play_loop()
 
 
 
