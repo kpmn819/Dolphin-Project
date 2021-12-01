@@ -50,8 +50,8 @@ image_centery = 540
 PortList = [1,4,17,27,22,5,6]
 # Port assignments 2 [in,13-Free,26-Pay]
 PortList2 = [1,13,26]
-# Port assignments 3 [out, 23-Bell]
-PortList3 = [0, 23]
+# Port assignments 3 [out, 23-Bell, 16 Lights]
+PortList3 = [0, 23, 16]
 
 
 
@@ -134,6 +134,7 @@ def show_rules():
             if Rnd_Chance >= PayOut:
                 Win = True
                 print('A Winner')
+                # Need to ring bell here for a couple of seconds PortList3[1]
                 
             else:
                 Win = False
@@ -195,6 +196,7 @@ def play_loop():
     shuffle(display_pics)  # scramble them these are the index numbers 
     # use display_pic to put up that pic on top (chalange pic)
     # use rnums to show all pics on bottom (computer pics)
+    GPIO.output(PortList3[2], True) # turn on the button lights
     for items in rnums:
         shuffle_pics()
         display_pic = display_pics[turn]  # picks a new one each turn
@@ -237,6 +239,7 @@ def play_loop():
         pygame.mixer.music.play()
 
     pygame.display.flip()
+    GPIO.output(PortList3[2], False) # turn off the button lights
 
     #  add delay here
     sleep(5)
@@ -359,7 +362,9 @@ size = (screen_width, screen_height)
 # assign I/O ports
 portassign(PortList) # main buttons
 portassign(PortList2) # free or pay
-portassign(PortList3) # output for bell relay
+portassign(PortList3) # output for bell and lights relays
+GPIO.output(PortList3[1], False) # no bell
+GPIO.output(PortList3[2], False) # no lights
 
 # for developement uncomment the line below
 #display = pygame.display.set_mode(size)
