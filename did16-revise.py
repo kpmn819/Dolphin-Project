@@ -36,7 +36,10 @@ display_pic = 0
 resp = 0
 Free = False # playing for free flag
 Win = False # winner flag
-PayOut = 2 # percentage of losers
+PayOut = 50
+
+
+ # percentage of losers
 image_centerx = 960
 image_centery = 540
 
@@ -108,8 +111,14 @@ def show_rules():
     black = (0, 0, 0,)
     red = (255, 50, 50)
     display.blit(bg_dol, (0, 0))
-    greeting = 'Press Start for free play or insert donation for a prize chance'
-    font_process(60, greeting, white, 100, 100)
+    greeting = 'Press Start for free play'
+    font_process(60, greeting, white, 100, 200)
+    greeting = 'or'
+    font_process(60, greeting, white, 100, 280)
+    greeting = 'Make a Donation and get a chance to win a Bonehenge Prize'
+    font_process(60, greeting, white, 100, 360)
+    greeting = '(Prizes are awarded randomly and are not dependent on final quiz score)'
+    font_process(30, greeting, white, 100, 1000)
     pygame.display.flip()
     
     # Select if this is a paid or free play
@@ -151,7 +160,7 @@ def show_rules():
     info = 'We can identify individuals by their dorsal fin shape'
     font_process(50, info, white, 100, 200)
     pygame.display.flip()
-    sleep(.5)
+    # sleep(.5)
 
     inst = 'See if you can match one on the bottom row to the top picture'
     font_process(50, inst, white, 30, 300)
@@ -191,6 +200,7 @@ def play_loop():
     wrong_ans = 0  # scoring
     white = (255, 255, 255)
     red = (255, 0, 0)
+    blue = (0, 0, 255)
     turn = 0  # used to access comp_pic
     display_pics = [x for x in range(max_pic)]  # this is a random list of the computer pics
     shuffle(display_pics)  # scramble them these are the index numbers 
@@ -233,10 +243,13 @@ def play_loop():
     font_process(60, score_msg, white, 100, 400)
     font_process(60, final_msg, white, 100, 500)
     if Win == True:
-        font_process(75,'You are a WINNER please see Keith for your prize',red, 100, 600)
+        font_process(75,'You are a WINNER!!',red, 100, 600)
+        font_process(75,'Please see one of our Staff for your prize',red, 100, 700)
         pygame.mixer.music.set_volume(1)
         pygame.mixer.music.load(gpath + 'fanfare.mp3')
         pygame.mixer.music.play()
+    if Win == False and Free == False:
+        font_process(60,'Sorry, you are not a winner this time', blue, 100, 600)
 
     pygame.display.flip()
     GPIO.output(PortList3[2], False) # turn off the button lights
