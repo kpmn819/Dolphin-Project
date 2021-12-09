@@ -137,17 +137,14 @@ def show_rules():
             Free = False
             Win = False # set it false for now
             Rnd_Chance = int(random() * 100 )
-            pygame.mixer.music.set_volume(.5)
-            pygame.mixer.music.load(gpath + 'Yay.mp3')
-            pygame.mixer.music.play()
+            play_sound('Yay.mp3', .5)
+            
             if Rnd_Chance >= PayOut:
                 Win = True
                 print('A Winner')
-                # Need to ring bell here for a couple of seconds PortList3[1]
                 
             else:
                 Win = False
-                print('Winner false = ', Win)
                 print('A Loser')
             
  
@@ -192,6 +189,11 @@ def font_process(size, message, color, x, y):
         display.blit(render_ds, render_ds_rect)
     display.blit(render_message, render_msg_rect)
 
+def play_sound(sfile,vol):
+    pygame.mixer.music.set_volume(vol)
+    pygame.mixer.music.load(gpath + sfile)
+    pygame.mixer.music.play()
+
 def play_loop():
     pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
     neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
@@ -223,11 +225,13 @@ def play_loop():
         if rnums[resp] == display_pic:
             pgm_rsp = pos_resp[randrange(len(pos_resp))]
             right_ans = right_ans + 1
+            play_sound('Quick-win.mp3', .3)
             print(pgm_rsp)
         else:
             pgm_rsp = neg_resp[randrange(len(neg_resp))]
             print(pgm_rsp)
             wrong_ans = wrong_ans + 1
+            play_sound('Downer.mp3', .2)
         score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
 
         # clear screen of old score and put up new one
@@ -245,9 +249,8 @@ def play_loop():
     if Win == True:
         font_process(75,'You are a WINNER!!',red, 100, 600)
         font_process(75,'Please see one of our Staff for your prize',red, 100, 700)
-        pygame.mixer.music.set_volume(1)
-        pygame.mixer.music.load(gpath + 'fanfare.mp3')
-        pygame.mixer.music.play()
+        play_sound('fanfare.mp3', 1)
+    
     if Win == False and Free == False:
         font_process(60,'Sorry, you are not a winner this time', blue, 100, 600)
 
@@ -297,7 +300,6 @@ def which_pic():
         time_out = pygame.USEREVENT
         pygame.time.set_timer(time_out, 40000) #  40 seconds
         # if idle for too long bail out
-        #  PROBLEM SCORE AFTER TIME OUT IS NOT RESET STARTS WITH FIRST TURN
         if event.type == time_out:
             print('time out happened')
             ans = 0
