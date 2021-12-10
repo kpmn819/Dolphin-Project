@@ -36,7 +36,7 @@ display_pic = 0
 resp = 0
 Free = False # playing for free flag
 Win = False # winner flag
-PayOut = 50
+PayOut = 5
 
 
  # percentage of losers
@@ -137,7 +137,7 @@ def show_rules():
             Free = False
             Win = False # set it false for now
             Rnd_Chance = int(random() * 100 )
-            play_sound('Yay.mp3', .5)
+            play_sound('Yay.mp3', .3)
             
             if Rnd_Chance >= PayOut:
                 Win = True
@@ -246,12 +246,17 @@ def play_loop():
     display.blit(bg_dol, (0, 0))
     font_process(60, score_msg, white, 100, 400)
     font_process(60, final_msg, white, 100, 500)
-    if Win == True:
+    sleep(1)
+    if Win:
         font_process(75,'You are a WINNER!!',red, 100, 600)
         font_process(75,'Please see one of our Staff for your prize',red, 100, 700)
         play_sound('fanfare.mp3', 1)
+        GPIO.output(PortList3[1], True) # turn on the bell
+        sleep(1)
+        GPIO.output(PortList3[1], False) # turn it off
+
     
-    if Win == False and Free == False:
+    if not Win and not Free:
         font_process(60,'Sorry, you are not a winner this time', blue, 100, 600)
 
     pygame.display.flip()
