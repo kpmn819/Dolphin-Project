@@ -34,8 +34,8 @@ max_pic = 5
 rnums = []
 display_pic = 0
 resp = 0
-Free = False # playing for free flag
-Win = False # winner flag
+free = False # playing for free flag
+win = False # winner flag
 PayOut = 75
 
 
@@ -105,8 +105,8 @@ def shuffle_pics():
 def show_rules():
     # display rules and wait for input
     # define font colors
-    global Free
-    global Win
+    global free
+    global win
     white = (255, 255, 255)
     black = (0, 0, 0,)
     red = (255, 50, 50)
@@ -129,25 +129,25 @@ def show_rules():
         #print('in pay detection')
         if GPIO.input(PortList2[1]) == GPIO.LOW:
             sleep(.08)
-            Free = True
-            Win = False
+            free = True
+            win = False
             print('Free Play')
                 
         if GPIO.input(PortList2[2]) == GPIO.LOW:
             print('PLAYBACK SHOULD HAPPEN')
             sleep(.08)
-            Free = False
-            Win = False # set it false for now
+            free = False
+            win = False # set it false for now
             Rnd_Chance = int(random() * 100 )
             play_sound('Yay.mp3', .3)
             
             
             if Rnd_Chance <= PayOut:
-                Win = True
+                win = True
                 print('A Winner')
                 
             else:
-                Win = False
+                win = False
                 print('A Loser')
             
     
@@ -165,7 +165,7 @@ def show_rules():
     inst = 'See if you can match one on the bottom row to the top picture'
     font_process(50, inst, white, 30, 300)
     pygame.display.flip()
-    if not Free:
+    if not free:
         sleep(2) # allow prev sound to end
     play_sound('pinball-start.mp3', .5)
     sleep(5.5)
@@ -254,7 +254,7 @@ def play_loop():
     font_process(60, score_msg, white, 100, 400)
     font_process(60, final_msg, white, 100, 500)
     sleep(1)
-    if Win:
+    if win:
         font_process(75,'You are a WINNER!!',red, 100, 600)
         font_process(75,'Please see one of our Staff for your prize',red, 100, 700)
         play_sound('fanfare.mp3', 1)
@@ -263,7 +263,7 @@ def play_loop():
         GPIO.output(PortList3[1], False) # turn it off
 
     
-    if not Win and not Free:
+    if not win and not free:
         font_process(60,'Sorry, you are not a winner this time', blue, 100, 600)
 
     pygame.display.flip()
