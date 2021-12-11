@@ -141,6 +141,7 @@ def show_rules():
             Rnd_Chance = int(random() * 100 )
             play_sound('Yay.mp3', .3)
             
+            
             if Rnd_Chance <= PayOut:
                 Win = True
                 print('A Winner')
@@ -149,7 +150,7 @@ def show_rules():
                 Win = False
                 print('A Loser')
             
- 
+    
     display.blit(bg_dol, (0, 0))
     greeting = 'Hello Welcome to ID the Dolphin'
     font_process(60, greeting, white, 100, 100)
@@ -158,13 +159,16 @@ def show_rules():
 
     info = 'We can identify individuals by their dorsal fin shape'
     font_process(50, info, white, 100, 200)
-    pygame.display.flip()
+    #pygame.display.flip()
     # sleep(.5)
 
     inst = 'See if you can match one on the bottom row to the top picture'
     font_process(50, inst, white, 30, 300)
     pygame.display.flip()
-    sleep(5)
+    if not Free:
+        sleep(2) # allow prev sound to end
+    play_sound('pinball-start.mp3', .5)
+    sleep(5.5)
     display.blit(bg_dol, (0, 0))
     pygame.display.flip()
 
