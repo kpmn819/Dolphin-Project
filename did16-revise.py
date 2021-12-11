@@ -36,7 +36,7 @@ display_pic = 0
 resp = 0
 Free = False # playing for free flag
 Win = False # winner flag
-PayOut = 5
+PayOut = 75
 
 
  # percentage of losers
@@ -117,8 +117,10 @@ def show_rules():
     font_process(60, greeting, white, 100, 280)
     greeting = 'Make a Donation and get a chance to win a Bonehenge Prize'
     font_process(60, greeting, white, 100, 360)
-    greeting = '(Prizes are awarded randomly and are not dependent on final quiz score)'
-    font_process(30, greeting, white, 100, 1000)
+    greeting = 'Prizes are awarded randomly and are not dependent on final quiz score'
+    font_process(30, greeting, white, 100, 800)
+    greeting = 'Odds of winning are 1 in '+ str(int(100 / (100 - PayOut)))
+    font_process(30, greeting, white, 100, 850)
     pygame.display.flip()
     
     # Select if this is a paid or free play
@@ -139,7 +141,7 @@ def show_rules():
             Rnd_Chance = int(random() * 100 )
             play_sound('Yay.mp3', .3)
             
-            if Rnd_Chance >= PayOut:
+            if Rnd_Chance <= PayOut:
                 Win = True
                 print('A Winner')
                 
@@ -194,6 +196,7 @@ def play_sound(sfile,vol):
     pygame.mixer.music.load(gpath + sfile)
     pygame.mixer.music.play()
 
+# ------------------------- Where all the action happens --------------
 def play_loop():
     pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
     neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
