@@ -36,7 +36,7 @@ display_pic = 0
 resp = 0
 free = False # playing for free flag
 win = False # winner flag
-PayOut = 75
+payout = 75
 
 
  # percentage of losers
@@ -119,7 +119,7 @@ def show_rules():
     font_process(60, greeting, white, 100, 360)
     greeting = 'Prizes are awarded randomly and are not dependent on final quiz score'
     font_process(30, greeting, white, 100, 800)
-    greeting = 'Odds of winning are 1 in '+ str(int(100 / (100 - PayOut)))
+    greeting = 'Odds of winning are 1 in '+ str(int(100 / (100 - payout)))
     font_process(30, greeting, white, 100, 850)
     pygame.display.flip()
     
@@ -142,7 +142,7 @@ def show_rules():
             play_sound('Yay.mp3', .3)
             
             
-            if Rnd_Chance <= PayOut:
+            if Rnd_Chance <= payout:
                 win = True
                 print('A Winner')
                 
@@ -195,7 +195,7 @@ def font_process(size, message, color, x, y):
         display.blit(render_ds, render_ds_rect)
     display.blit(render_message, render_msg_rect)
 
-def play_sound(sfile,vol):
+def play_sound(sfile, vol):
     pygame.mixer.music.set_volume(vol)
     pygame.mixer.music.load(gpath + sfile)
     pygame.mixer.music.play()
@@ -219,7 +219,8 @@ def play_loop():
     for items in rnums:
         shuffle_pics()
         display_pic = display_pics[turn]  # picks a new one each turn
-        send_to_screen(display_pic, rnums, 'Testing')  # put up the challenge screen
+        caption = 'Turn Number ' + str(turn + 1)
+        send_to_screen(display_pic, rnums, caption)  # put up the challenge screen
 
         #  go get user response
         resp = which_pic2() #  go and wait for button input return pic#
@@ -240,6 +241,7 @@ def play_loop():
             wrong_ans = wrong_ans + 1
             play_sound('Downer.mp3', .2)
         score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
+        
 
         # clear screen of old score and put up new one
         display.blit(bg_dol, (0, 0))
@@ -359,6 +361,7 @@ def send_to_screen(display_me, rnums, caption):
     choicesx = 50
     choicesy = 700
     i = 0
+    font_process(60, caption, (255,255,255), 100, 400)
     #print('send to screen has rnums as ', str(rnums))
     for items in rnums:
         # use the rnums list to index your_pic list to get the pictures
