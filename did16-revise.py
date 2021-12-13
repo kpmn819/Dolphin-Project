@@ -216,6 +216,9 @@ def play_loop():
     # use display_pic to put up that pic on top (chalange pic)
     # use rnums to show all pics on bottom (computer pics)
     GPIO.output(PortList3[2], True) # turn on the button lights
+
+
+    # ========= Loop Start ============
     for items in rnums:
         shuffle_pics()
         display_pic = display_pics[turn]  # picks a new one each turn
@@ -243,11 +246,21 @@ def play_loop():
         score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
         
 
-        # clear screen of old score and put up new one
+        # clear screen of old score and put up new one 
         display.blit(bg_dol, (0, 0))
         font_process(60, score_msg, white, 500, 500)
-        font_process(60, pgm_rsp, white, 500, 550)
+        font_process(60, pgm_rsp, white, 500, 600)
+        pygame.display.flip()
         turn = turn + 1
+        
+        sleep(1)
+        # now display just the turn and score no response
+        if turn != 5:
+            display.blit(bg_dol, (0, 0))
+            font_process(60, score_msg, white, 500, 500)
+            pygame.display.flip()
+    # =========== Loop End =============  
+      
 
     # final score
     score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
