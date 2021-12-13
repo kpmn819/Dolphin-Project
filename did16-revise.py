@@ -36,7 +36,7 @@ display_pic = 0
 resp = 0
 free = False # playing for free flag
 win = False # winner flag
-payout = 75
+payout = 33
 
 
  # percentage of losers
@@ -119,7 +119,7 @@ def show_rules():
     font_process(60, greeting, white, 100, 360)
     greeting = 'Prizes are awarded randomly and are not dependent on final quiz score'
     font_process(30, greeting, white, 100, 800)
-    greeting = 'Odds of winning are 1 in '+ str(int(100 / (100 - payout)))
+    greeting = 'Odds of winning are 1 in '+ str(int(100 / payout))
     font_process(30, greeting, white, 100, 850)
     pygame.display.flip()
     
