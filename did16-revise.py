@@ -2,6 +2,7 @@
 
 
 # V16 now under GIT control
+# try a push when logged in
 
 # IMPORTS START --------------------------------------------------
 # makes extensive use of pygame to blit the screen
