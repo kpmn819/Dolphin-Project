@@ -164,21 +164,26 @@ def font_process(size, message, color, x, y):
     
     black = (0,0,0)
     d_shadow = 3
+    # create a font object from a system font
     font = pygame.font.SysFont('FreeSans', size, True, False)
+    # render font on a new surface font.render(text, antialias, bkgnd = none)
     render_message = font.render(message, True, color)
+    # render drop shadow in black
     if d_shadow:
         render_ds = font.render(message, True, black)
         render_ds_rect = render_message.get_rect()
     # attempt to center works
+    # create a rectangular object for the text surface object
     render_msg_rect = render_message.get_rect()
     render_cent = render_msg_rect[1]
-
+    # center in x, use y from call
     render_msg_rect.center = (image_centerx, y) # (x,y) x = screen center
-
+    # blit drop shadow then text to image
     if d_shadow:
         render_ds_rect.center = (image_centerx + d_shadow, y + d_shadow)
         display.blit(render_ds, render_ds_rect)
     display.blit(render_message, render_msg_rect)
+    # no flip here up to the caller
 
 def play_sound(sfile, vol):
     pygame.mixer.music.set_volume(vol)
