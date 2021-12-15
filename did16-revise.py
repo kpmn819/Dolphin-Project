@@ -1,17 +1,6 @@
 #!/usr/bin/python3
 
-# V DID6 changed name and moved pygame stuff
-# V6 got display working now going to rearrange
-# V7 long form font renders going to try to streamline
-# V8 got the screens working
-# V9 attempt to detect mouse clicks
-# V9 mouse clicks good tried to center text, no good
-# V10 working version, need to add escape timeout
-# V11 larger pictures in graphics folder
-# V12 got time_out delay working had to extend to 40 seconds so as not to time out early
-# V13 added drop shadow, for now it is fixed at 3 but could be passed to font_process
-# V15 adding pay input
-# V16 cleaned up polling for free vs pay input
+
 # V16 now under GIT control
 
 # IMPORTS START --------------------------------------------------
@@ -36,10 +25,8 @@ display_pic = 0
 resp = 0
 free = False # playing for free flag
 win = False # winner flag
-payout = 33
+payout = 33 # percentage of winners
 
-
- # percentage of losers
 image_centerx = 960
 image_centery = 540
 
@@ -47,17 +34,14 @@ image_centery = 540
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
-    # Define Ports if PortList starts with a 0 it is output
-    # if it starts with a 1 it is input
+# Define Ports if portList starts with a 0 it is output
+# if it starts with a 1 it is input
 # Port assignments 1 [in,4-B1,17-B2,27-B3,22-B4,5-B5,6-Rst]
-PortList = [1,4,17,27,22,5,6]
+portList = [1,4,17,27,22,5,6]
 # Port assignments 2 [in,13-Free,26-Pay]
-PortList2 = [1,13,26]
+portList2 = [1,13,26]
 # Port assignments 3 [out, 23-Bell, 16 Lights]
-PortList3 = [0, 23, 16]
-
-
-
+portList3 = [0, 23, 16]
 # GPIO PORT END ___________________________________________________
 
 # DEFINE CLASES START ---------------------------------------------
@@ -124,16 +108,16 @@ def show_rules():
     pygame.display.flip()
     
     # Select if this is a paid or free play
-    while GPIO.input(PortList2[1]) == GPIO.HIGH and GPIO.input(PortList2[2]) == GPIO.HIGH:
+    while GPIO.input(portList2[1]) == GPIO.HIGH and GPIO.input(portList2[2]) == GPIO.HIGH:
         sleep(.05)
         #print('in pay detection')
-        if GPIO.input(PortList2[1]) == GPIO.LOW:
+        if GPIO.input(portList2[1]) == GPIO.LOW:
             sleep(.08)
             free = True
             win = False
             print('Free Play')
                 
-        if GPIO.input(PortList2[2]) == GPIO.LOW:
+        if GPIO.input(portList2[2]) == GPIO.LOW:
             print('PLAYBACK SHOULD HAPPEN')
             sleep(.08)
             free = False
@@ -215,7 +199,7 @@ def play_loop():
     shuffle(display_pics)  # scramble them these are the index numbers 
     # use display_pic to put up that pic on top (chalange pic)
     # use rnums to show all pics on bottom (computer pics)
-    GPIO.output(PortList3[2], True) # turn on the button lights
+    GPIO.output(portList3[2], True) # turn on the button lights
 
 
     # ========= Loop Start ============
@@ -273,16 +257,16 @@ def play_loop():
         font_process(75,'You are a WINNER!!',red, 100, 600)
         font_process(75,'Please see one of our Staff for your prize',red, 100, 700)
         play_sound('fanfare.mp3', 1)
-        GPIO.output(PortList3[1], True) # turn on the bell
+        GPIO.output(portList3[1], True) # turn on the bell
         sleep(1)
-        GPIO.output(PortList3[1], False) # turn it off
+        GPIO.output(portList3[1], False) # turn it off
 
     
     if not win and not free:
         font_process(60,'Sorry, you are not a winner this time', blue, 100, 600)
 
     pygame.display.flip()
-    GPIO.output(PortList3[2], False) # turn off the button lights
+    GPIO.output(portList3[2], False) # turn off the button lights
 
     #  add delay here
     sleep(5)
@@ -297,11 +281,11 @@ def which_pic2():
         end_time = time()
         # run through all assigned pins
         # we start with an index of 1 to skip the Input/Output selector
-        for index in range(1, len(PortList)):
-            sleep(.03) # debounce time
-            if GPIO.input(PortList[index]) == GPIO.LOW:
-                ans = PortList[index] # first pull the value
-                ans = PortList.index(PortList[index]) -1 # then locate it in the list
+        for index in range(1, len(portList)):
+            #sleep(.03) # debounce time
+            if GPIO.input(portList[index]) == GPIO.LOW:
+                ans = portList[index] # first pull the value
+                ans = portList.index(portList[index]) -1 # then locate it in the list
                 print('Button Press: ',str(ans))
                 # special case to reset DOESN'T WORK
                 if ans == 5:
@@ -369,7 +353,7 @@ def send_to_screen(display_me, rnums, caption):
     comp_pic = [cw1, cw2, cw3, cw4, cw5]
 
     # display the challenge pic
-    display.blit(comp_pic[display_me],(840,10)) # Challange pic location
+    display.blit(comp_pic[display_me],(840,40)) # Challange pic location
     # display the other pictures from list on bottom
     choicesx = 50
     choicesy = 700
@@ -403,11 +387,11 @@ bgColor = (0,0,0)
 size = (screen_width, screen_height)
 
 # assign I/O ports
-portassign(PortList) # main buttons
-portassign(PortList2) # free or pay
-portassign(PortList3) # output for bell and lights relays
-GPIO.output(PortList3[1], False) # no bell
-GPIO.output(PortList3[2], False) # no lights
+portassign(portList) # main buttons
+portassign(portList2) # free or pay
+portassign(portList3) # output for bell and lights relays
+GPIO.output(portList3[1], False) # no bell
+GPIO.output(portList3[2], False) # no lights
 
 # for developement uncomment the line below
 #display = pygame.display.set_mode(size)
