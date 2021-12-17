@@ -31,6 +31,9 @@ payout = 33 # percentage of winners
 image_centerx = 960
 image_centery = 540
 
+# may be used later to select game 1 or 2
+game1 = True
+
 
 # VARIABLE INITIALIZE END _________________________________________
 
@@ -448,7 +451,7 @@ def main():
     try:
         init()
         # note init only runs once
-        while 1:
+        while game1: # may add second game later
             print('Main Program')
             show_rules()
             shuffle_pics()
