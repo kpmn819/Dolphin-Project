@@ -139,7 +139,10 @@ def show_rules():
                 win = False
                 print('A Loser')
             
-    
+def game1_intro():
+    white = (255, 255, 255)
+    black = (0, 0, 0,)
+    red = (255, 50, 50)
     display.blit(bg_dol, (0, 0))
     greeting = 'Hello Welcome to ID the Dolphin'
     font_process(60, greeting, white, 100, 100)
@@ -381,9 +384,9 @@ def send_to_screen(display_me, rnums, caption):
 
 def which_game():
     global game1
-    game1 = input('which game will it be? ')
+    x = input('which game will it be? ')
     # replace this with button inputs
-    if game1 == 1:
+    if game1 == int(x):
         game1 = True
     else:
         game1 = False
@@ -467,6 +470,7 @@ def main():
             while game1: # may add second game later
                 print('Main Program')
                 show_rules()
+                game1_intro()
                 shuffle_pics()
                 play_loop() # this is where all the work is done might want to break it up
             game1 = False
