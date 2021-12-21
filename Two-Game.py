@@ -104,15 +104,15 @@ def show_rules():
     
     display.blit(bg_dol, (0, 0))
     greeting = 'Press Start for free play'
-    font_process(60, greeting, white, 100, 200)
+    font_process(60, greeting, white, image_centerx, 200)
     greeting = 'or'
-    font_process(60, greeting, white, 100, 280)
+    font_process(60, greeting, white, image_centerx, 280)
     greeting = 'Make a Donation and get a chance to win a Bonehenge Prize'
-    font_process(60, greeting, white, 100, 360)
+    font_process(60, greeting, white, image_centerx, 360)
     greeting = 'Prizes are awarded randomly and are not dependent on final quiz score'
-    font_process(30, greeting, white, 100, 800)
+    font_process(30, greeting, white, image_centerx, 800)
     greeting = 'Odds of winning are 1 in '+ str(int(100 / payout))
-    font_process(30, greeting, white, 100, 850)
+    font_process(30, greeting, white, image_centerx, 850)
     pygame.display.flip()
     
     # Select if this is a paid or free play
@@ -148,17 +148,17 @@ def game1_intro():
     red = (255, 50, 50)
     display.blit(bg_dol, (0, 0))
     greeting = 'Hello Welcome to ID the Dolphin'
-    font_process(60, greeting, white, 100, 100)
+    font_process(60, greeting, white, image_centerx, 100)
     pygame.display.flip()
     sleep(2)
 
     info = 'We can identify individuals by their dorsal fin shape'
-    font_process(50, info, white, 100, 200)
+    font_process(50, info, white, image_centerx, 200)
     #pygame.display.flip()
     # sleep(.5)
 
     inst = 'See if you can match one on the bottom row to the top picture'
-    font_process(50, inst, white, 30, 300)
+    font_process(50, inst, white, image_centerx, 300)
     pygame.display.flip()
     if not free:
         sleep(2) # allow prev sound to end
@@ -185,12 +185,14 @@ def font_process(size, message, color, x, y):
     # attempt to center works
     # create a rectangular object for the text surface object
     render_msg_rect = render_message.get_rect()
-    render_cent = render_msg_rect[1]
+    
     # center in x, use y from call
-    render_msg_rect.center = (image_centerx, y) # (x,y) x = screen center
+    #render_msg_rect.center = (image_centerx, y) # (x,y) x = screen center
+    render_msg_rect.center = (x, y) # (x,y) x = screen center
     # blit drop shadow then text to image
     if d_shadow:
-        render_ds_rect.center = (image_centerx + d_shadow, y + d_shadow)
+        #render_ds_rect.center = (image_centerx + d_shadow, y + d_shadow)
+        render_ds_rect.center = (x + d_shadow, y + d_shadow)
         display.blit(render_ds, render_ds_rect)
     display.blit(render_message, render_msg_rect)
     # no flip here up to the caller
@@ -248,8 +250,8 @@ def play_loop():
 
         # clear screen of old score and put up new one 
         display.blit(bg_dol, (0, 0))
-        font_process(60, score_msg, white, 500, 500)
-        font_process(60, pgm_rsp, white, 500, 600)
+        font_process(60, score_msg, white, image_centerx, 500)
+        font_process(60, pgm_rsp, white, image_centerx, 600)
         pygame.display.flip()
         turn = turn + 1
         
@@ -257,7 +259,7 @@ def play_loop():
         # now display just the turn and score no response
         if turn != 5:
             display.blit(bg_dol, (0, 0))
-            font_process(60, score_msg, white, 500, 500)
+            font_process(60, score_msg, white, image_centerx, 500)
             pygame.display.flip()
     # =========== Loop End =============  
       
@@ -266,12 +268,12 @@ def play_loop():
     score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
     final_msg = (final_resp[right_ans])
     display.blit(bg_dol, (0, 0))
-    font_process(60, score_msg, white, 100, 400)
-    font_process(60, final_msg, white, 100, 500)
+    font_process(60, score_msg, white, image_centerx, 400)
+    font_process(60, final_msg, white, image_centerx, 500)
     sleep(1)
     if win:
-        font_process(75,'You are a WINNER!!',red, 100, 600)
-        font_process(75,'Please see one of our Staff for your prize',red, 100, 700)
+        font_process(75,'You are a WINNER!!',red, image_centerx, 600)
+        font_process(75,'Please see one of our Staff for your prize',red, image_centerx, 700)
         play_sound('fanfare.mp3', 1)
         GPIO.output(portList3[1], True) # turn on the bell
         sleep(1)
@@ -279,7 +281,7 @@ def play_loop():
 
     
     if not win and not free:
-        font_process(60,'Sorry, you are not a winner this time', blue, 100, 600)
+        font_process(60,'Sorry, you are not a winner this time', blue, image_centerx, 600)
 
     pygame.display.flip()
     GPIO.output(portList3[2], False) # turn off the button lights
@@ -374,7 +376,7 @@ def send_to_screen(display_me, rnums, caption):
     choicesx = 50
     choicesy = 700
     i = 0
-    font_process(60, caption, (255,255,255), 100, 400)
+    font_process(60, caption, (255,255,255), image_centerx, 400)
     #print('send to screen has rnums as ', str(rnums))
     for items in rnums:
         # use the rnums list to index your_pic list to get the pictures
@@ -386,12 +388,15 @@ def send_to_screen(display_me, rnums, caption):
     pygame.display.flip()
 
 def which_game():
-    white = (255, 255, 255)
+    ''' puts up select screen and sets game1 T or F'''
+    # needs to light only buttons 1 & 5
     global game1
     print('which game will it be? ')
     display.blit(bg_dol, (0, 0))
     greeting = 'Select a game to play'
     font_process(60, greeting, white, 100, 200)
+    greeting = 'ID the Dolphin'
+    font_process(60, greeting, white, 10, 400)
     pygame.display.flip()
 
     while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
