@@ -31,6 +31,10 @@ payout = 33 # percentage of winners
 
 image_centerx = 960
 image_centery = 540
+white = (255, 255, 255)
+black = (0, 0, 0)
+red = (255, 0, 0)
+blue = (0, 0, 255)
 
 # may be used later to select game 1 or 2
 game1 = True
@@ -96,9 +100,8 @@ def show_rules():
     # define font colors
     global free
     global win
-    white = (255, 255, 255)
-    black = (0, 0, 0,)
-    red = (255, 50, 50)
+ 
+    
     display.blit(bg_dol, (0, 0))
     greeting = 'Press Start for free play'
     font_process(60, greeting, white, 100, 200)
@@ -383,13 +386,20 @@ def send_to_screen(display_me, rnums, caption):
     pygame.display.flip()
 
 def which_game():
+    white = (255, 255, 255)
     global game1
-    x = input('which game will it be? ')
+    print('which game will it be? ')
+    display.blit(bg_dol, (0, 0))
+    greeting = 'Select a game to play'
+    font_process(60, greeting, white, 100, 200)
+    pygame.display.flip()
+
+    while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
     # replace this with button inputs
-    if game1 == int(x):
-        game1 = True
-    else:
-        game1 = False
+        if GPIO.input(portList[1]) == GPIO.LOW:
+            game1 = True
+        if GPIO.input(portList[5]) == GPIO.LOW:
+            game1 = False
 
 
 # METHODS AND FUNCTIONS END _________________________________________
