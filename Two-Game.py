@@ -402,9 +402,11 @@ def which_game():
     print('which game will it be? ')
     display.blit(bg_dol, (0, 0))
     greeting = 'Select a game to play'
-    font_process(60, greeting, white, 100, 200)
+    font_process(60, greeting, white, image_centerx, 200)
     greeting = 'ID the Dolphin'
-    font_process(60, greeting, white, 10, 400)
+    font_process(60, greeting, white, 250, 800)
+    greeting = 'Bonehenge tour quiz'
+    font_process(60, greeting, white, 1580, 800)
     pygame.display.flip()
     
     while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
@@ -633,6 +635,7 @@ def main():
                 # make it go
                 # at start donation or free play?
                 show_rules(g2_open_bkg)
+                # globals free and win are now set
                 if donation:
                     donation_start()
                 else:
