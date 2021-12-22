@@ -1,0 +1,4 @@
+['first qestion', 'correct answer 1', 'wrong 1', 'wrong 1a']
+['second question', 'correct answer 2', 'wrong 2', 'wrong 2a']
+['third question', 'correct answer 3', 'wrong 3', 'wrong 3a']
+['fourth question', 'correct answer 4', 'wrong 4', 'wrong 4a']
