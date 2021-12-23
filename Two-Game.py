@@ -7,8 +7,9 @@
 # IMPORTS START --------------------------------------------------
 # makes extensive use of pygame to blit the screen
 #from random import randrange, shuffle, random, sample
-import random
-from random import randrange, shuffle
+#from random import *
+from random import randrange, shuffle, random, sample
+#from random import sample
 from time import sleep, time
 import sys, pygame
 from pygame.locals import *
