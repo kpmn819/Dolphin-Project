@@ -51,6 +51,9 @@ blue = (0, 0, 255)
 # may be used later to select game 1 or 2
 game1 = True
 
+pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
+neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
+final_resp =['Better Try Again','Keep Working at it','Not Bad','Pretty Good','Excellent Nice Job','100% Wow!']
 
 # VARIABLE INITIALIZE END _________________________________________
 
@@ -222,9 +225,9 @@ def parse_string(long_string, final_length):
 
 # ------------------------- Where all the action happens --------------
 def play_loop():
-    pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
-    neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
-    final_resp =['Better Try Again','Keep Working at it','Not Bad','Pretty Good','Excellent Nice Job','100% Wow!']
+    #pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
+    #neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
+    #final_resp =['Better Try Again','Keep Working at it','Not Bad','Pretty Good','Excellent Nice Job','100% Wow!']
     right_ans = 0  # scoring
     wrong_ans = 0  # scoring
     white = (255, 255, 255)
@@ -549,7 +552,7 @@ def game2_input():
 
 def take_turns():
     right_count = 0
-    
+    wrong_count = 0
     for turn_no in range(0,5):
         # put up the questions
         rand_pic = q_pics[0][turn_no]
@@ -564,11 +567,22 @@ def take_turns():
         # check if we can reuse code from game 1
         if correct:
             print('got it')
+            pgm_rsp = pos_resp[randrange(len(pos_resp))]
             play_sound('Quick-win.mp3', .3)
             right_count += 1
         else:
             print('no such luck')
+            pgm_rsp = neg_resp[randrange(len(neg_resp))]
             play_sound('Downer.mp3', .2)
+            wrong_count += 1
+        # display currnt score and message
+        score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(5 - right_ans)+' wrong')
+        # clear screen of old score and put up new one 
+        display.blit(g2_open_bkg, (0, 0))
+        font_process(60, score_msg, white, image_centerx, 500)
+        font_process(60, pgm_rsp, white, image_centerx, 600)
+        pygame.display.flip()
+        sleep(2)
     return right_count        
 
 def donation_start():
