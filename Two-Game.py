@@ -390,14 +390,36 @@ def which_game():
     ''' puts up select screen and sets game1 T or F'''
     # needs to light only buttons 1 & 5
     global game1
+
     print('which game will it be? ')
     display.blit(bg_dol, (0, 0))
-    greeting = 'Select a game to play'
-    font_process(60, greeting, white, image_centerx, 200)
-    greeting = 'ID the Dolphin'
-    font_process(60, greeting, white, 250, 800)
-    greeting = 'Bonehenge tour quiz'
-    font_process(60, greeting, white, 1580, 800)
+    greeting = 'Please select a game to play'
+    font_process(80, greeting, white, image_centerx, 200)
+    # first the left side
+    greeting = 'Identify the Dolphin'
+    x = 430
+    y = 500
+    font_process(70, greeting, white, x, y)
+    # chop these up
+    y = y + 90
+    greeting = 'See if you can tell which fins go together'
+    parsed_lines = parse_string(greeting, 30)
+    for item in parsed_lines:
+        font_process(60, item, white, x, y)
+        y = y + 70
+    # now the right side
+    x = 1430
+    y = 500
+    greeting = 'Bonehenge Tour Quiz'
+    font_process(70, greeting, white, x, y)
+    y = y + 90
+    greeting = 'Answer some questions about what you learned on your tour'
+    parsed_lines = parse_string(greeting, 30)
+    for item in parsed_lines:
+        font_process(60, item, white, x, y)
+        y = y + 70
+    
+    
     pygame.display.flip()
     
     while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
