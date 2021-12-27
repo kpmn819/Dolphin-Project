@@ -17,7 +17,10 @@ import pygame.font
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 import os
+# code to use comma seperated values
 import csv
+# code to break up long strings
+import textwrap
 FPS = 30
 game1 = False
 # game 2 variables
@@ -210,6 +213,12 @@ def play_sound(sfile, vol):
     pygame.mixer.music.set_volume(vol)
     pygame.mixer.music.load(gpath + sfile)
     pygame.mixer.music.play()
+
+def parse_string(long_string, final_length):
+    # this handy util breaks up long lines for us
+	lines_list = textwrap.wrap(long_string, final_length)
+	# will return any number of lines of final_length
+	return lines_list 
 
 # ------------------------- Where all the action happens --------------
 def play_loop():
@@ -455,7 +464,7 @@ def get_file(list_file):
 
 def pick_some(qpicks,rstart,rend):
     '''takes a number and returns list of randoms nums in a range'''
-    pics_list = random.sample(range(rstart, rend), qpicks)
+    pics_list = sample(range(rstart, rend), qpicks)
     return [pics_list]     
 
 def q_to_screen(rand_pick, questions):
@@ -465,7 +474,7 @@ def q_to_screen(rand_pick, questions):
     # randomize the next three and assign to buttons
     #print('this one in q to scrn ' + str(this_one))
     # this gives us a scramble list
-    screen_order = random.sample(range(1,4),3)
+    screen_order = sample(range(1,4),3)
     # a list like [1,2,3] or [3,1,2] that orders the answers
     # put screen stuff together with font_process
     return screen_order
@@ -475,7 +484,41 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     ''' matches user input to correct answer '''
     #print('get usr ans has ' + str(right_ans))
     # display stuff
+    white = (255, 255, 255)
     print('Question is ' + str(questions[rand_pic][0]))
+
+    display.blit(g2_open_bkg, (0, 0))
+
+    # now chop up the lines and display question
+    parsed_lines = parse_string(str(questions[rand_pic][0]), 30)
+    x = 990
+    y = 100
+    for item in parsed_lines:
+        font_process(60, item, white, x, y)
+        y = y + 70
+    # now chop up the lines and display answers left first
+    parsed_lines = parse_string(str(questions[rand_pic][screen_order[0]]), 20)
+    x = 280
+    y = 500
+    for item in parsed_lines:
+        font_process(50, item, white, x, y)
+        y = y + 70  
+    # middle answer  
+    parsed_lines = parse_string(str(questions[rand_pic][screen_order[1]]), 20)
+    x = 990
+    y = 500
+    for item in parsed_lines:
+        font_process(50, item, white, x, y)
+        y = y + 70 
+    # right most answer   
+    parsed_lines = parse_string(str(questions[rand_pic][screen_order[2]]), 20)
+    x = 1600
+    y = 500
+    for item in parsed_lines:
+        font_process(50, item, white, x, y)
+        y = y + 70    
+
+    pygame.display.flip()
     # now display the reorderd choices
     # the index below questions is the big list then
     # [rand_pic] pics which of the questions and
@@ -483,13 +526,26 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     print('Left 1 =' + str(questions[rand_pic][screen_order[0]]))
     print('Mid 2 =' + str(questions[rand_pic][screen_order[1]]))
     print('Rgt 3 =' + str(questions[rand_pic][screen_order[2]]))
-    user_ans = input('Select 1-3 ')
+    #user_ans = input('Select 1-3 ')
+    user_ans = game2_input()
     # code below to be replaced with button input
-    if int(user_ans) == right_ans:
+    if user_ans == right_ans:
         correct = True
     else:
         correct = False
     return correct
+
+def game2_input():
+    while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[3]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
+        sleep(.1)
+        if GPIO.input(portList[1])  == GPIO.LOW:
+            ans = 1
+        if GPIO.input(portList[3])  == GPIO.LOW:
+            ans = 2
+        if GPIO.input(portList[5])  == GPIO.LOW:
+            ans = 3
+
+    return ans
 
 def take_turns():
     right_count = 0
@@ -505,11 +561,14 @@ def take_turns():
         # go get answers lots of stuff in this call but it needs
         # all of it
         correct = get_user_ans(rand_pic, right_ans, questions, screen_order)
+        # check if we can reuse code from game 1
         if correct:
             print('got it')
+            play_sound('Quick-win.mp3', .3)
             right_count += 1
         else:
             print('no such luck')
+            play_sound('Downer.mp3', .2)
     return right_count        
 
 def donation_start():
