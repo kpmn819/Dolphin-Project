@@ -284,31 +284,9 @@ def play_loop():
             pygame.display.flip()
     # =========== Loop End =============  
       
-
+    return [right_ans, wrong_ans]
     # final score
-    score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
-    final_msg = (final_resp[right_ans])
-    display.blit(bg_dol, (0, 0))
-    font_process(60, score_msg, white, image_centerx, 400)
-    font_process(60, final_msg, white, image_centerx, 500)
-    sleep(1)
-    if win:
-        font_process(75,'You are a WINNER!!',red, image_centerx, 600)
-        font_process(75,'Please see one of our Staff for your prize',red, image_centerx, 700)
-        play_sound('fanfare.mp3', 1)
-        GPIO.output(portList3[1], True) # turn on the bell
-        sleep(1)
-        GPIO.output(portList3[1], False) # turn it off
-
     
-    if not win and not free:
-        font_process(60,'Sorry, you are not a winner this time', blue, image_centerx, 600)
-
-    pygame.display.flip()
-    GPIO.output(portList3[2], False) # turn off the button lights
-
-    #  add delay here
-    sleep(5)
 
 def which_pic2():
     # this version uses the push buttons instead of touch screen
@@ -553,6 +531,7 @@ def game2_input():
 def take_turns():
     right_count = 0
     wrong_count = 0
+    GPIO.output(portList3[2], True) # turn on the button lights
     for turn_no in range(0,5):
         # put up the questions
         rand_pic = q_pics[0][turn_no]
@@ -576,20 +555,47 @@ def take_turns():
             play_sound('Downer.mp3', .2)
             wrong_count += 1
         # display currnt score and message
-        score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(5 - right_ans)+' wrong')
+        score_msg = ('Current Score  '+ str(right_count)+ ' right  '+ str(wrong_count)+' wrong')
         # clear screen of old score and put up new one 
         display.blit(g2_open_bkg, (0, 0))
         font_process(60, score_msg, white, image_centerx, 500)
         font_process(60, pgm_rsp, white, image_centerx, 600)
         pygame.display.flip()
         sleep(2)
-    return right_count        
+    return [right_count, wrong_count]        
 
 def donation_start():
     pass
 
 def free_start():
     pass
+
+def final_display(right_ans, wrong_ans):
+    # final score
+    score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
+    final_msg = (final_resp[right_ans])
+    display.blit(bg_dol, (0, 0))
+    font_process(60, score_msg, white, image_centerx, 400)
+    font_process(60, final_msg, white, image_centerx, 500)
+    sleep(1)
+    if win:
+        font_process(75,'You are a WINNER!!',red, image_centerx, 600)
+        font_process(75,'Please see one of our Staff for your prize',red, image_centerx, 700)
+        play_sound('fanfare.mp3', 1)
+        GPIO.output(portList3[1], True) # turn on the bell
+        sleep(1)
+        GPIO.output(portList3[1], False) # turn it off
+
+    
+    if not win and not free:
+        font_process(60,'Sorry, you are not a winner this time', blue, image_centerx, 600)
+
+    pygame.display.flip()
+    GPIO.output(portList3[2], False) # turn off the button lights
+
+    #  add delay here
+    sleep(5)
+
 
 # ----------- END GAME 2 CODE ----------------
 
@@ -699,8 +705,10 @@ def main():
                 show_rules(bg_dol)
                 game1_intro()
                 shuffle_pics()
-                play_loop() # this is where all the work is done might want to break it up
-                
+                final_score = play_loop() # this is where all the work is done might want to break it up
+                final_display(final_score[0], final_score[1])
+                sleep(5)
+                print('Your final score is '+str(final_score[0])+' right and '+str(5 -final_score[0])+ ' wrong')
             
 
             else:
@@ -715,7 +723,9 @@ def main():
                 else:
                     free_start()
                 final_score = take_turns()
-                print('Your final score is '+str(final_score)+' right and '+str(5 -final_score)+ ' wrong')
+                final_display(final_score[0], final_score[1])
+                sleep(5)
+                print('Your final score is '+str(final_score[0])+' right and '+str(5 -final_score[0])+ ' wrong')
             
             
 
