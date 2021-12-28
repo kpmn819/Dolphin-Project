@@ -99,11 +99,11 @@ def portassign(ports):
 
 def shuffle_pics():
     # uses max_pic to randomize pictures
-    global display_pic
+    #global display_pic
     global rnums
 
     # display_pic = randrange(max_pic)
-    print('selected picture ' + str(randrange(max_pic)))
+    print('SHUFFEL selected picture ' + str(randrange(max_pic)))
     rnums = [x for x in range(max_pic)]
     shuffle(rnums)
     # rnums is a shuffled list of the picture numbers for choosing
@@ -243,7 +243,7 @@ def play_loop():
 
     # ========= Loop Start ============
     for items in rnums:
-        shuffle_pics()
+        #shuffle_pics()
         display_pic = display_pics[turn]  # picks a new one each turn
         caption = 'Turn Number ' + str(turn + 1)
         send_to_screen(display_pic, rnums, caption)  # put up the challenge screen
@@ -294,7 +294,7 @@ def which_pic2():
     start_time = time()
     end_time = time()
     ans = -1 # this value will be set and returned to Play_Loop
-    while end_time - start_time < 10: # delay in seconds till loop ends
+    while end_time - start_time < 60: # delay in seconds till loop ends
         end_time = time()
         # run through all assigned pins
         # we start with an index of 1 to skip the Input/Output selector
@@ -491,6 +491,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     #print('get usr ans has ' + str(right_ans))
     # display stuff
     white = (255, 255, 255)
+    arrow_y = 900
     print('Question is ' + str(questions[rand_pic][0]))
 
     display.blit(g2_open_bkg, (0, 0))
@@ -508,7 +509,8 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     y = 500
     for item in parsed_lines:
         font_process(50, item, white, x, y)
-        y = y + 70  
+        y = y + 70
+    display.blit(blue_arrow, (x, arrow_y)) 
     # middle answer  
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[1]]), 20)
     x = 990
@@ -516,6 +518,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(50, item, white, x, y)
         y = y + 70 
+    display.blit(blue_arrow, (x, arrow_y)) 
     # right most answer   
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[2]]), 20)
     x = 1600
@@ -523,7 +526,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(50, item, white, x, y)
         y = y + 70    
-
+    display.blit(blue_arrow, (x, arrow_y)) 
     pygame.display.flip()
     # now display the reorderd choices
     # the index below questions is the big list then
