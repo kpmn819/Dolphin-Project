@@ -53,7 +53,7 @@ game1 = True
 
 pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
-final_resp =['Better Try Again','Keep Working at it','Not Bad','Pretty Good','Excellent Nice Job','100% Wow!']
+final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
 
 # VARIABLE INITIALIZE END _________________________________________
 
@@ -398,7 +398,7 @@ def which_game():
     # first the left side
     greeting = 'Identify the Dolphin'
     x = 430
-    y = 500
+    y = 600
     font_process(70, greeting, white, x, y)
     # chop these up
     y = y + 90
@@ -407,9 +407,10 @@ def which_game():
     for item in parsed_lines:
         font_process(60, item, white, x, y)
         y = y + 70
+    display.blit(blue_arrow, (x - 300, y))
     # now the right side
     x = 1430
-    y = 500
+    y = 600
     greeting = 'Bonehenge Tour Quiz'
     font_process(70, greeting, white, x, y)
     y = y + 90
@@ -418,6 +419,8 @@ def which_game():
     for item in parsed_lines:
         font_process(60, item, white, x, y)
         y = y + 70
+    display.blit(blue_arrow, (x + 300, y))
+    
     
     
     pygame.display.flip()
@@ -586,11 +589,7 @@ def take_turns():
         sleep(2)
     return [right_count, wrong_count]        
 
-def donation_start():
-    pass
 
-def free_start():
-    pass
 
 def final_display(right_ans, wrong_ans):
     # final score
@@ -669,6 +668,10 @@ cdol4 = gpath + '4dol4.jpg'
 cdol5 = gpath + '5dol5.jpg'
 bg_dolphins = gpath + 'dolphins3.jpg'
 g2_open_pict = gpath + 'g2_open_bkg.jpg'
+# arrows
+r_arro = gpath + 'red_arrow.png'
+y_arro = gpath + 'yello_arrow.png'
+b_arro = gpath + 'blue_arrow.png'
 # path to sounds
 awefile = gpath + 'Awe.mp3'
 yayfile = gpath + 'Yay.mp3'
@@ -685,6 +688,7 @@ cw4 = pygame.image.load(cdol4).convert_alpha()
 cw5 = pygame.image.load(cdol5).convert_alpha()
 bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
+blue_arrow = pygame.image.load(b_arro).convert_alpha()
 
 # these lists point to the picture files, there are 5 matching pairs
 # currently they are the same pictures but will be replaced
@@ -740,10 +744,6 @@ def main():
                 # at start donation or free play?
                 show_rules(g2_open_bkg)
                 # globals free and win are now set
-                if donation:
-                    donation_start()
-                else:
-                    free_start()
                 final_score = take_turns()
                 final_display(final_score[0], final_score[1])
                 sleep(5)
