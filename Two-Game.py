@@ -99,10 +99,11 @@ def portassign(ports):
 
 def shuffle_pics():
     # uses max_pic to randomize pictures
-    #global display_pic
+    # this is only called once per game and sets
+    # the lookup order of rnums like this [2,3,0,1,4]
+    # so each turn has the same layout but
+    # different chalange pictures
     global rnums
-
-    # display_pic = randrange(max_pic)
     print('SHUFFEL selected picture ' + str(randrange(max_pic)))
     rnums = [x for x in range(max_pic)]
     shuffle(rnums)
@@ -118,7 +119,7 @@ def show_rules(picture):
  
     
     display.blit(picture, (0, 0))
-    greeting = 'Press Start for free play'
+    greeting = 'Press Free Play'
     font_process(60, greeting, white, image_centerx, 200)
     greeting = 'or'
     font_process(60, greeting, white, image_centerx, 280)
@@ -156,7 +157,7 @@ def show_rules(picture):
             else:
                 win = False
                 print('A Loser')
-            
+           
 def game1_intro():
     white = (255, 255, 255)
     black = (0, 0, 0,)
@@ -390,7 +391,7 @@ def which_game():
     ''' puts up select screen and sets game1 T or F'''
     # needs to light only buttons 1 & 5
     global game1
-
+    GPIO.output(portList3[2], True) # turn on the button lights
     print('which game will it be? ')
     display.blit(bg_dol, (0, 0))
     greeting = 'Please select a game to play'
@@ -432,7 +433,7 @@ def which_game():
             game1 = True
         if GPIO.input(portList[5]) == GPIO.LOW:
             game1 = False
-        
+    GPIO.output(portList3[2], False) # turn off the button lights   
 
 
 # ------------------- GAME 2 CODE START --------------------------
@@ -736,7 +737,7 @@ def main():
                 shuffle_pics()
                 final_score = play_loop() # this is where all the work is done might want to break it up
                 final_display(final_score[0], final_score[1])
-                sleep(5)
+                sleep(3)
                 print('Your final score is '+str(final_score[0])+' right and '+str(5 -final_score[0])+ ' wrong')
             
 
