@@ -109,7 +109,7 @@ def shuffle_pics():
 
     # hard code this to 5 cause that's how many on screen
     #rnums = [x for x in range(5)]
-
+    # now gets random sample of a range of numbers to max_pic
     rnums = sample(range( 0, max_pic), 5)
 
     #shuffle(rnums)
@@ -232,9 +232,7 @@ def parse_string(long_string, final_length):
 
 # ------------------------- Where all the action happens --------------
 def play_loop():
-    #pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
-    #neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
-    #final_resp =['Better Try Again','Keep Working at it','Not Bad','Pretty Good','Excellent Nice Job','100% Wow!']
+    
     right_ans = 0  # scoring
     wrong_ans = 0  # scoring
     white = (255, 255, 255)
@@ -242,10 +240,13 @@ def play_loop():
     blue = (0, 0, 255)
     turn = 0  # used to access comp_pic
 
-    #display_pics = [x for x in range(max_pic)]  # this is a random list of the computer pics
-    #display_pics = sample(range( 0, max_pic), 5)
-    display_pics = rnums
-    #shuffle(display_pics)  # scramble them these are the index numbers 
+    # set the content of the two lists to be equal
+    display_pics = rnums[:]
+    # now scramble order of display
+    shuffle(display_pics)
+    print('display pics is now ' + str(display_pics))
+    print('rnums is now--- ' + str(rnums))
+   
     # use display_pic to put up that pic on top (chalange pic)
     # use rnums to show all pics on bottom (computer pics)
     GPIO.output(portList3[2], True) # turn on the button lights
@@ -254,6 +255,7 @@ def play_loop():
     # ========= Loop Start ============
     for items in rnums:
         #shuffle_pics()
+        
         display_pic = display_pics[turn]  # picks a new one each turn
         caption = 'Turn Number ' + str(turn + 1)
         send_to_screen(display_pic, rnums, caption)  # put up the challenge screen
@@ -372,16 +374,15 @@ def which_pic():
     return ans
 
 
-def send_to_screen(display_me, rnums, caption):
+def send_to_screen(challange, rnums, caption):
 
     # display_pic is challenge picture
     # should do the background graphic here
     your_pic = [uw1, uw2, uw3, uw4, uw5, uw6]
     comp_pic = [cw1, cw2, cw3, cw4, cw5, cw6]
-    print('send to screen rnums is ' + str(rnums))
-    print('send to screen has challange = ' + str(display_me))
+   
     # display the challenge pic
-    display.blit(comp_pic[display_me],(840,40)) # Challange pic location
+    display.blit(comp_pic[challange],(840,40)) # Challange pic location
     # display the other pictures from list on bottom
     choicesx = 50
     choicesy = 700
