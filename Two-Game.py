@@ -33,7 +33,7 @@ donation = False
 # IMPORTS END ____________________________________________________
 
 # VARIABLE INITIALIZE START----------------------------------------
-max_pic = 5
+max_pic = 6
 rnums = []
 display_pic = 0
 resp = 0
@@ -104,11 +104,17 @@ def shuffle_pics():
     # so each turn has the same layout but
     # different chalange pictures
     global rnums
-    print('SHUFFEL selected picture ' + str(randrange(max_pic)))
-    rnums = [x for x in range(max_pic)]
-    shuffle(rnums)
+    
+    #rnums = [x for x in range(max_pic)]
+
+    # hard code this to 5 cause that's how many on screen
+    #rnums = [x for x in range(5)]
+
+    rnums = sample(range( 0, max_pic), 5)
+
+    #shuffle(rnums)
     # rnums is a shuffled list of the picture numbers for choosing
-    print('rnums is now ' + str(rnums))
+    print('rnums is now>>> ' + str(rnums))
     # iterate to build a list of random numbers
 
 def show_rules(picture):
@@ -235,8 +241,11 @@ def play_loop():
     red = (255, 0, 0)
     blue = (0, 0, 255)
     turn = 0  # used to access comp_pic
-    display_pics = [x for x in range(max_pic)]  # this is a random list of the computer pics
-    shuffle(display_pics)  # scramble them these are the index numbers 
+
+    #display_pics = [x for x in range(max_pic)]  # this is a random list of the computer pics
+    #display_pics = sample(range( 0, max_pic), 5)
+    display_pics = rnums
+    #shuffle(display_pics)  # scramble them these are the index numbers 
     # use display_pic to put up that pic on top (chalange pic)
     # use rnums to show all pics on bottom (computer pics)
     GPIO.output(portList3[2], True) # turn on the button lights
@@ -367,9 +376,10 @@ def send_to_screen(display_me, rnums, caption):
 
     # display_pic is challenge picture
     # should do the background graphic here
-    your_pic = [uw1, uw2, uw3, uw4, uw5]
-    comp_pic = [cw1, cw2, cw3, cw4, cw5]
-
+    your_pic = [uw1, uw2, uw3, uw4, uw5, uw6]
+    comp_pic = [cw1, cw2, cw3, cw4, cw5, cw6]
+    print('send to screen rnums is ' + str(rnums))
+    print('send to screen has challange = ' + str(display_me))
     # display the challenge pic
     display.blit(comp_pic[display_me],(840,40)) # Challange pic location
     # display the other pictures from list on bottom
@@ -665,11 +675,14 @@ udol2 = gpath + '2dol.jpg'
 udol3 = gpath + '3dol.jpg'
 udol4 = gpath + '4dol.jpg'
 udol5 = gpath + '5dol.jpg'
+udol6 = gpath + '6dol.jpg'
+# now set pointers to computer picks
 cdol1 = gpath + '1dol1.jpg'
 cdol2 = gpath + '2dol2.jpg'
 cdol3 = gpath + '3dol3.jpg'
 cdol4 = gpath + '4dol4.jpg'
 cdol5 = gpath + '5dol5.jpg'
+cdol6 = gpath + '6dol6.jpg'
 bg_dolphins = gpath + 'dolphins3.jpg'
 g2_open_pict = gpath + 'g2_open_bkg.jpg'
 # arrows
@@ -680,16 +693,21 @@ b_arro = gpath + 'blue_arrow.png'
 awefile = gpath + 'Awe.mp3'
 yayfile = gpath + 'Yay.mp3'
 # now to actually load them same letters this has to be done in two steps
+# first the user pictures
 uw1 = pygame.image.load(udol1).convert_alpha()
 uw2 = pygame.image.load(udol2).convert_alpha()
 uw3 = pygame.image.load(udol3).convert_alpha()
 uw4 = pygame.image.load(udol4).convert_alpha()
 uw5 = pygame.image.load(udol5).convert_alpha()
+uw6 = pygame.image.load(udol6).convert_alpha()
+# now the computer pictures
 cw1 = pygame.image.load(cdol1).convert_alpha()
 cw2 = pygame.image.load(cdol2).convert_alpha()
 cw3 = pygame.image.load(cdol3).convert_alpha()
 cw4 = pygame.image.load(cdol4).convert_alpha()
 cw5 = pygame.image.load(cdol5).convert_alpha()
+cw6 = pygame.image.load(cdol6).convert_alpha()
+
 bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
 blue_arrow = pygame.image.load(b_arro).convert_alpha()
