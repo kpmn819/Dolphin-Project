@@ -33,7 +33,7 @@ donation = False
 # IMPORTS END ____________________________________________________
 
 # VARIABLE INITIALIZE START----------------------------------------
-max_pic = 6
+max_pic = 12
 rnums = []
 display_pic = 0
 resp = 0
@@ -378,8 +378,8 @@ def send_to_screen(challange, rnums, caption):
 
     # display_pic is challenge picture
     # should do the background graphic here
-    your_pic = [uw1, uw2, uw3, uw4, uw5, uw6]
-    comp_pic = [cw1, cw2, cw3, cw4, cw5, cw6]
+    your_pic = [uw1, uw2, uw3, uw4, uw5, uw6, uw7, uw8, uw9, uw10, uw11, uw12]
+    comp_pic = [cw1, cw2, cw3, cw4, cw5, cw6, cw7, cw8, cw9, cw10, cw11, cw12]
    
     # display the challenge pic
     display.blit(comp_pic[challange],(840,40)) # Challange pic location
@@ -671,19 +671,40 @@ pygame.display.set_caption('ID The Dolphin')
 pygame.mixer.music.set_volume(1.0)
 # load the pics 'c' for computer 'u' for user
 gpath = '/home/pi/MyCode/graphics/'
-udol1 = gpath + '1dol.jpg'
-udol2 = gpath + '2dol.jpg'
-udol3 = gpath + '3dol.jpg'
-udol4 = gpath + '4dol.jpg'
-udol5 = gpath + '5dol.jpg'
-udol6 = gpath + '6dol.jpg'
+udol1 = gpath + '25a.jpg'
+udol2 = gpath + '26a.jpg'
+udol3 = gpath + '75a.jpg'
+udol4 = gpath + '86a.jpg'
+udol5 = gpath + '100a.jpg'
+udol6 = gpath + '126a.jpg'
+
+udol7 = gpath + '271b.jpg'
+udol8 = gpath + '454a.jpg'
+udol9 = gpath + '618a.jpg'
+udol10 = gpath + '706a.jpg'
+udol11 = gpath + '1142a.jpg'
+udol12 = gpath + '1726a.jpg'
+
+
+
+
 # now set pointers to computer picks
-cdol1 = gpath + '1dol1.jpg'
-cdol2 = gpath + '2dol2.jpg'
-cdol3 = gpath + '3dol3.jpg'
-cdol4 = gpath + '4dol4.jpg'
-cdol5 = gpath + '5dol5.jpg'
-cdol6 = gpath + '6dol6.jpg'
+cdol1 = gpath + '25a.jpg'
+cdol2 = gpath + '26a.jpg'
+cdol3 = gpath + '75a.jpg'
+cdol4 = gpath + '86a.jpg'
+cdol5 = gpath + '100a.jpg'
+cdol6 = gpath + '126a.jpg'
+
+cdol7 = gpath + '271b.jpg'
+cdol8 = gpath + '454a.jpg'
+cdol9 = gpath + '618a.jpg'
+cdol10 = gpath + '706a.jpg'
+cdol11 = gpath + '1142a.jpg'
+cdol12 = gpath + '1726a.jpg'
+
+
+
 bg_dolphins = gpath + 'dolphins3.jpg'
 g2_open_pict = gpath + 'g2_open_bkg.jpg'
 # arrows
@@ -701,6 +722,12 @@ uw3 = pygame.image.load(udol3).convert_alpha()
 uw4 = pygame.image.load(udol4).convert_alpha()
 uw5 = pygame.image.load(udol5).convert_alpha()
 uw6 = pygame.image.load(udol6).convert_alpha()
+uw7 = pygame.image.load(udol7).convert_alpha()
+uw8 = pygame.image.load(udol8).convert_alpha()
+uw9 = pygame.image.load(udol9).convert_alpha()
+uw10 = pygame.image.load(udol10).convert_alpha()
+uw11 = pygame.image.load(udol11).convert_alpha()
+uw12 = pygame.image.load(udol12).convert_alpha()
 # now the computer pictures
 cw1 = pygame.image.load(cdol1).convert_alpha()
 cw2 = pygame.image.load(cdol2).convert_alpha()
@@ -708,6 +735,12 @@ cw3 = pygame.image.load(cdol3).convert_alpha()
 cw4 = pygame.image.load(cdol4).convert_alpha()
 cw5 = pygame.image.load(cdol5).convert_alpha()
 cw6 = pygame.image.load(cdol6).convert_alpha()
+cw7 = pygame.image.load(cdol7).convert_alpha()
+cw8 = pygame.image.load(cdol8).convert_alpha()
+cw9 = pygame.image.load(cdol9).convert_alpha()
+cw10 = pygame.image.load(cdol10).convert_alpha()
+cw11 = pygame.image.load(cdol11).convert_alpha()
+cw12 = pygame.image.load(cdol12).convert_alpha()
 
 bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
