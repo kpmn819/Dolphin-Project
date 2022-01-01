@@ -21,6 +21,8 @@ import os
 import csv
 # code to break up long strings
 import textwrap
+import timeout_decorator
+
 FPS = 30
 game1 = False
 # game 2 variables
@@ -54,7 +56,7 @@ game1 = True
 pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
 final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
-
+master_timeout = 20
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
@@ -117,6 +119,9 @@ def shuffle_pics():
     print('rnums is now>>> ' + str(rnums))
     # iterate to build a list of random numbers
 
+# the timeout decorator wraps this so if user walks away
+# it will reset
+@timeout_decorator.timeout(master_timeout,use_signals=True)
 def show_rules(picture):
     # display rules and wait for input
     # define font colors
@@ -231,6 +236,7 @@ def parse_string(long_string, final_length):
 	return lines_list 
 
 # ------------------------- Where all the action happens --------------
+@timeout_decorator.timeout(master_timeout,use_signals=True)
 def play_loop():
     
     right_ans = 0  # scoring
@@ -785,10 +791,19 @@ def main():
                 print('game one picked')
                 
                 print('Main Program')
-                show_rules(bg_dol)
+                try:
+                    show_rules(bg_dol)
+                except:
+                    continue
+                    
+                
                 game1_intro()
                 shuffle_pics()
-                final_score = play_loop() # this is where all the work is done might want to break it up
+                try:
+                    final_score = play_loop() # this is where all the work is done might want to break it up
+                except:
+                    continue
+
                 final_display(final_score[0], final_score[1])
                 sleep(3)
                 print('Your final score is '+str(final_score[0])+' right and '+str(5 -final_score[0])+ ' wrong')
