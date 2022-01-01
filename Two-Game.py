@@ -380,7 +380,8 @@ def send_to_screen(challange, rnums, caption):
     # should do the background graphic here
     your_pic = [uw1, uw2, uw3, uw4, uw5, uw6, uw7, uw8, uw9, uw10, uw11, uw12]
     comp_pic = [cw1, cw2, cw3, cw4, cw5, cw6, cw7, cw8, cw9, cw10, cw11, cw12]
-   
+    # enable the line below for easier testing
+    #comp_pic = [uw1, uw2, uw3, uw4, uw5, uw6, uw7, uw8, uw9, uw10, uw11, uw12]
     # display the challenge pic
     display.blit(comp_pic[challange],(840,40)) # Challange pic location
     # display the other pictures from list on bottom
@@ -671,18 +672,18 @@ pygame.display.set_caption('ID The Dolphin')
 pygame.mixer.music.set_volume(1.0)
 # load the pics 'c' for computer 'u' for user
 gpath = '/home/pi/MyCode/graphics/'
-udol1 = gpath + '25a.jpg'
-udol2 = gpath + '26a.jpg'
+udol1 = gpath + '25b.jpg'
+udol2 = gpath + '26b.jpg'
 udol3 = gpath + '75a.jpg'
 udol4 = gpath + '86a.jpg'
-udol5 = gpath + '100a.jpg'
-udol6 = gpath + '126a.jpg'
+udol5 = gpath + '100b.jpg'
+udol6 = gpath + '126b.jpg'
 
-udol7 = gpath + '271b.jpg'
-udol8 = gpath + '454a.jpg'
+udol7 = gpath + '271c.jpg'
+udol8 = gpath + '454b.jpg'
 udol9 = gpath + '618a.jpg'
-udol10 = gpath + '706a.jpg'
-udol11 = gpath + '1142a.jpg'
+udol10 = gpath + '706b.jpg'
+udol11 = gpath + '1142b.jpg'
 udol12 = gpath + '1726a.jpg'
 
 
@@ -691,17 +692,17 @@ udol12 = gpath + '1726a.jpg'
 # now set pointers to computer picks
 cdol1 = gpath + '25a.jpg'
 cdol2 = gpath + '26a.jpg'
-cdol3 = gpath + '75a.jpg'
-cdol4 = gpath + '86a.jpg'
+cdol3 = gpath + '75b.jpg'
+cdol4 = gpath + '86c.jpg'
 cdol5 = gpath + '100a.jpg'
 cdol6 = gpath + '126a.jpg'
 
 cdol7 = gpath + '271b.jpg'
 cdol8 = gpath + '454a.jpg'
-cdol9 = gpath + '618a.jpg'
+cdol9 = gpath + '618b.jpg'
 cdol10 = gpath + '706a.jpg'
 cdol11 = gpath + '1142a.jpg'
-cdol12 = gpath + '1726a.jpg'
+cdol12 = gpath + '1726b.jpg'
 
 
 
