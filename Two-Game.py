@@ -56,7 +56,8 @@ game1 = True
 pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
 final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
-master_timeout = 20
+# set the delay for reset if they walk away
+master_timeout = 8
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
@@ -575,6 +576,9 @@ def game2_input():
 
     return ans
 
+# timer decorator
+
+@timeout_decorator.timeout(master_timeout,use_signals=True)
 def take_turns():
     right_count = 0
     wrong_count = 0
@@ -794,6 +798,7 @@ def main():
                 try:
                     show_rules(bg_dol)
                 except:
+                    GPIO.output(portList3[2], False) # turn off the button lights
                     continue
                     
                 
@@ -802,6 +807,7 @@ def main():
                 try:
                     final_score = play_loop() # this is where all the work is done might want to break it up
                 except:
+                    GPIO.output(portList3[2], False) # turn off the button lights
                     continue
 
                 final_display(final_score[0], final_score[1])
@@ -814,9 +820,18 @@ def main():
             
                 # make it go
                 # at start donation or free play?
-                show_rules(g2_open_bkg)
+                try:
+                    show_rules(g2_open_bkg)
+                except:
+                    GPIO.output(portList3[2], False) # turn off the button lights
+                    continue
                 # globals free and win are now set
-                final_score = take_turns()
+                try:
+                    final_score = take_turns()
+                except:
+                    GPIO.output(portList3[2], False) # turn off the button lights
+                    continue
+                
                 final_display(final_score[0], final_score[1])
                 sleep(5)
                 print('Your final score is '+str(final_score[0])+' right and '+str(5 -final_score[0])+ ' wrong')
