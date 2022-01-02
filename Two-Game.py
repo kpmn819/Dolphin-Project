@@ -49,6 +49,8 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
+# only using arrows 0, 2 and 4 for now
+arrow_loc = ((30, 830), (0, 0), (960, 830), (0, 0), (1750, 830))
 
 # may be used later to select game 1 or 2
 game1 = True
@@ -57,7 +59,7 @@ pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
 final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
 # set the delay for reset if they walk away
-master_timeout = 8
+master_timeout = 120
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
@@ -310,27 +312,28 @@ def play_loop():
 def which_pic2():
     # this version uses the push buttons instead of touch screen
     # decided to do it as a polling loop rather than interrupts
-    start_time = time()
-    end_time = time()
+    #start_time = time()
+    #end_time = time()
     ans = -1 # this value will be set and returned to Play_Loop
-    while end_time - start_time < 60: # delay in seconds till loop ends
-        end_time = time()
+    #while end_time - start_time < 60: # delay in seconds till loop ends
+        #end_time = time()
         # run through all assigned pins
         # we start with an index of 1 to skip the Input/Output selector
+    while True:
         for index in range(1, len(portList)):
             #sleep(.03) # debounce time
             if GPIO.input(portList[index]) == GPIO.LOW:
                 ans = portList[index] # first pull the value
                 ans = portList.index(portList[index]) -1 # then locate it in the list
                 print('Button Press: ',str(ans))
-                # special case to reset DOESN'T WORK
-                if ans == 5:
-                    ans = -1
+            
         if ans in range(0, 5):
-            break #  get out of loop
+            break # got our answer break out of forever loop
+    return ans
+                
             
 
-    return ans
+    
 
 
 
@@ -427,7 +430,7 @@ def which_game():
     for item in parsed_lines:
         font_process(60, item, white, x, y)
         y = y + 70
-    display.blit(blue_arrow, (x - 300, y))
+    display.blit(blue_arrow, (arrow_loc[0]))
     # now the right side
     x = 1430
     y = 600
@@ -439,7 +442,7 @@ def which_game():
     for item in parsed_lines:
         font_process(60, item, white, x, y)
         y = y + 70
-    display.blit(blue_arrow, (x + 300, y))
+    display.blit(blue_arrow, (arrow_loc[4]))
     
     
     
@@ -530,7 +533,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(50, item, white, x, y)
         y = y + 70
-    display.blit(blue_arrow, (x, arrow_y)) 
+    display.blit(blue_arrow, (arrow_loc[0])) 
     # middle answer  
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[1]]), 20)
     x = 990
@@ -538,7 +541,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(50, item, white, x, y)
         y = y + 70 
-    display.blit(blue_arrow, (x, arrow_y)) 
+    display.blit(blue_arrow, (arrow_loc[2])) 
     # right most answer   
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[2]]), 20)
     x = 1600
@@ -546,7 +549,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(50, item, white, x, y)
         y = y + 70    
-    display.blit(blue_arrow, (x, arrow_y)) 
+    display.blit(blue_arrow, (arrow_loc[4])) 
     pygame.display.flip()
     # now display the reorderd choices
     # the index below questions is the big list then
@@ -831,7 +834,7 @@ def main():
                 except:
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
-                
+
                 final_display(final_score[0], final_score[1])
                 sleep(5)
                 print('Your final score is '+str(final_score[0])+' right and '+str(5 -final_score[0])+ ' wrong')
