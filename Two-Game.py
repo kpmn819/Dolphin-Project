@@ -60,7 +60,7 @@ pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
 final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
 # set the delay for reset if they walk away
-master_timeout = 8
+master_timeout = 300
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
@@ -418,7 +418,7 @@ def which_game():
     global game1
     GPIO.output(portList3[2], True) # turn on the button lights
     print('which game will it be? ')
-    display.blit(bg_dol, (0, 0))
+    display.blit(game_choice, (0, 0))
     greeting = 'Please select a game to play'
     font_process(80, greeting, white, image_centerx, 200)
     # first the left side
@@ -724,6 +724,8 @@ cdol12 = gpath + '1726b.jpg'
 
 bg_dolphins = gpath + 'dolphins3.jpg'
 g2_open_pict = gpath + 'g2_open_bkg.jpg'
+free_donate_pict = gpath + 'free_donate.jpg'
+game_choice_pict = gpath + 'game_choice.jpg'
 # arrows
 r_arro = gpath + 'red_arrow.png'
 y_arro = gpath + 'yello_arrow.png'
@@ -761,6 +763,8 @@ cw12 = pygame.image.load(cdol12).convert_alpha()
 
 bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
+free_donate = pygame.image.load(free_donate_pict).convert_alpha()
+game_choice = pygame.image.load(game_choice_pict).convert_alpha()
 blue_arrow = pygame.image.load(b_arro).convert_alpha()
 
 # these lists point to the picture files, there are 5 matching pairs
@@ -802,7 +806,7 @@ def main():
                 
                 print('Main Program')
                 try:
-                    show_rules(bg_dol)
+                    show_rules(free_donate)
                 except timeout_decorator.TimeoutError:
                     print('timeout from show_rules')
                     GPIO.output(portList3[2], False) # turn off the button lights
