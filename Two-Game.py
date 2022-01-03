@@ -51,7 +51,7 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
 # only using arrows 0, 2 and 4 for now
-arrow_loc = ((30, 830), (0, 0), (960, 830), (0, 0), (1750, 830))
+arrow_loc = ((30, 890), (460, 890), (960, 890), (1355, 890), (1750, 890))
 
 # may be used later to select game 1 or 2
 game1 = True
@@ -420,7 +420,7 @@ def which_game():
     print('which game will it be? ')
     display.blit(game_choice, (0, 0))
     greeting = 'Please select a game to play'
-    font_process(80, greeting, white, image_centerx, 200)
+    font_process(80, greeting, white, image_centerx, 300)
     # first the left side
     greeting = 'Identify the Dolphin'
     x = 430
@@ -627,13 +627,13 @@ def final_display(right_ans, wrong_ans):
     # final score
     score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
     final_msg = (final_resp[right_ans])
-    display.blit(bg_dol, (0, 0))
-    font_process(60, score_msg, white, image_centerx, 400)
-    font_process(60, final_msg, white, image_centerx, 500)
+    display.blit(finalscore, (0, 0))
+    font_process(80, score_msg, white, image_centerx, 500)
+    font_process(60, final_msg, white, image_centerx, 600)
     sleep(1)
     if win:
-        font_process(75,'You are a WINNER!!',red, image_centerx, 600)
-        font_process(75,'Please see one of our Staff for your prize',red, image_centerx, 700)
+        font_process(75,'You are a WINNER!!',red, image_centerx, 900)
+        font_process(75,'Please see one of our Staff for your prize',red, image_centerx, 1000)
         play_sound('fanfare.mp3', 1)
         GPIO.output(portList3[1], True) # turn on the bell
         sleep(1)
@@ -641,7 +641,7 @@ def final_display(right_ans, wrong_ans):
 
     
     if not win and not free:
-        font_process(60,'Sorry, you are not a winner this time', blue, image_centerx, 600)
+        font_process(60,'Sorry, you are not a winner this time', (175,175,255), image_centerx, 1000)
 
     pygame.display.flip()
     GPIO.output(portList3[2], False) # turn off the button lights
@@ -723,9 +723,10 @@ cdol12 = gpath + '1726b.jpg'
 
 
 bg_dolphins = gpath + 'dolphins3.jpg'
-g2_open_pict = gpath + 'g2_open_bkg.jpg'
+g2_open_pict = gpath + 'game_2.jpg'
 free_donate_pict = gpath + 'free_donate.jpg'
 game_choice_pict = gpath + 'game_choice.jpg'
+finalscore_pict = gpath + 'finalscore.jpg'
 # arrows
 r_arro = gpath + 'red_arrow.png'
 y_arro = gpath + 'yello_arrow.png'
@@ -765,6 +766,7 @@ bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
 free_donate = pygame.image.load(free_donate_pict).convert_alpha()
 game_choice = pygame.image.load(game_choice_pict).convert_alpha()
+finalscore = pygame.image.load(finalscore_pict).convert_alpha()
 blue_arrow = pygame.image.load(b_arro).convert_alpha()
 
 # these lists point to the picture files, there are 5 matching pairs
