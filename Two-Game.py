@@ -6,8 +6,7 @@
 
 # IMPORTS START --------------------------------------------------
 # makes extensive use of pygame to blit the screen
-#from random import randrange, shuffle, random, sample
-#from random import *
+
 from random import randrange, shuffle, random, sample
 #from random import sample
 from time import sleep, time
@@ -21,6 +20,8 @@ import os
 import csv
 # code to break up long strings
 import textwrap
+''' this decorater wraps the major functions and methods
+to allow resetting the game if they walk away'''
 import timeout_decorator
 
 FPS = 30
@@ -59,7 +60,7 @@ pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
 final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
 # set the delay for reset if they walk away
-master_timeout = 120
+master_timeout = 8
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
@@ -103,21 +104,14 @@ def portassign(ports):
 
 
 def shuffle_pics():
-    # uses max_pic to randomize pictures
-    # this is only called once per game and sets
-    # the lookup order of rnums like this [2,3,0,1,4]
-    # so each turn has the same layout but
-    # different chalange pictures
+    '''uses max_pic to randomize pictures
+     this is only called once per game and sets
+     the lookup order of rnums like this [2,3,0,1,4]
+     so each turn has the same layout but
+     different chalange pictures '''
     global rnums
-    
-    #rnums = [x for x in range(max_pic)]
-
-    # hard code this to 5 cause that's how many on screen
-    #rnums = [x for x in range(5)]
     # now gets random sample of a range of numbers to max_pic
     rnums = sample(range( 0, max_pic), 5)
-
-    #shuffle(rnums)
     # rnums is a shuffled list of the picture numbers for choosing
     print('rnums is now>>> ' + str(rnums))
     # iterate to build a list of random numbers
@@ -126,6 +120,8 @@ def shuffle_pics():
 # it will reset
 @timeout_decorator.timeout(master_timeout,use_signals=True)
 def show_rules(picture):
+    ''' called by both games selects if it is a free game or
+    if they put in some money sets global variables'''
     # display rules and wait for input
     # define font colors
     global free
@@ -199,6 +195,8 @@ def game1_intro():
 
 
 def font_process(size, message, color, x, y):
+    ''' combines everthing needed to blit fonts to the screeen,
+    called from various methods that use fonts'''
     # attempt to combine all font operations into one call that
     # renders and blits the text
     
@@ -241,7 +239,10 @@ def parse_string(long_string, final_length):
 # ------------------------- Where all the action happens --------------
 @timeout_decorator.timeout(master_timeout,use_signals=True)
 def play_loop():
-    
+    '''this is the big kahona it calls send_to_screen that puts up
+    the pictures, which_pic2 that waits for a button press and
+    returns an answer, play_loop returns final_score to the 
+    main program'''
     right_ans = 0  # scoring
     wrong_ans = 0  # scoring
     white = (255, 255, 255)
@@ -310,13 +311,14 @@ def play_loop():
     
 
 def which_pic2():
-    # this version uses the push buttons instead of touch screen
-    # decided to do it as a polling loop rather than interrupts
-    #start_time = time()
-    #end_time = time()
+    '''this version uses the push buttons instead of touch screen
+    gets called from play_loop and returns the answer.
+    decided to do it as a polling loop rather than interrupts '''
+    
+    
     ans = -1 # this value will be set and returned to Play_Loop
-    #while end_time - start_time < 60: # delay in seconds till loop ends
-        #end_time = time()
+    
+        
         # run through all assigned pins
         # we start with an index of 1 to skip the Input/Output selector
     while True:
@@ -385,7 +387,8 @@ def which_pic():
 
 
 def send_to_screen(challange, rnums, caption):
-
+    '''called by play_loop puts up challange and user pictures from the 
+    lists below'''
     # display_pic is challenge picture
     # should do the background graphic here
     your_pic = [uw1, uw2, uw3, uw4, uw5, uw6, uw7, uw8, uw9, uw10, uw11, uw12]
@@ -800,7 +803,8 @@ def main():
                 print('Main Program')
                 try:
                     show_rules(bg_dol)
-                except:
+                except timeout_decorator.TimeoutError:
+                    print('timeout from show_rules')
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
                     
@@ -809,7 +813,8 @@ def main():
                 shuffle_pics()
                 try:
                     final_score = play_loop() # this is where all the work is done might want to break it up
-                except:
+                except timeout_decorator.TimeoutError:
+                    print('timeout from play_loop')
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
 
@@ -825,13 +830,15 @@ def main():
                 # at start donation or free play?
                 try:
                     show_rules(g2_open_bkg)
-                except:
+                except timeout_decorator.TimeoutError:
+                    print('timeout from show_rules')
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
                 # globals free and win are now set
                 try:
                     final_score = take_turns()
-                except:
+                except timeout_decorator.TimeoutError:
+                    print('timeout from take_turns')
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
 
