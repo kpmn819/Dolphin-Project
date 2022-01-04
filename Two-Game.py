@@ -42,7 +42,7 @@ display_pic = 0
 resp = 0
 free = False # playing for free flag
 win = False # winner flag
-payout = 33 # percentage of winners
+payout = 99 # percentage of winners
 
 image_centerx = 960
 image_centery = 540
@@ -634,6 +634,9 @@ def final_display(right_ans, wrong_ans):
     # final score
     score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
     final_msg = (final_resp[right_ans])
+    final_sound = final_audio[right_ans]
+    final_volume = final_vol[right_ans]
+    play_sound(final_sound, final_volume)
     display.blit(finalscore, (0, 0))
     font_process(80, score_msg, white, image_centerx, 500)
     font_process(60, final_msg, white, image_centerx, 600)
@@ -641,9 +644,10 @@ def final_display(right_ans, wrong_ans):
     if win:
         font_process(75,'You are a WINNER!!',red, image_centerx, 900)
         font_process(75,'Please see one of our Staff for your prize',red, image_centerx, 1000)
+        sleep(3) # let sound above play out
         play_sound('fanfare.mp3', 1)
         GPIO.output(portList3[1], True) # turn on the bell
-        sleep(1)
+        sleep(.5)
         GPIO.output(portList3[1], False) # turn it off
 
     
@@ -741,6 +745,11 @@ b_arro = gpath + 'blue_arrow.png'
 # path to sounds
 awefile = gpath + 'Awe.mp3'
 yayfile = gpath + 'Yay.mp3'
+# audio files for final score
+# had to convert a couple to mp3, pygame didn't like the wav version
+final_audio = ('0_right.wav','1_right.wav','2_right.mp3','3_right.wav',
+               '4_right.mp3','5_right.wav')
+final_vol = (1,1,1,.5,1,1)
 # now to actually load them same letters this has to be done in two steps
 # first the user pictures
 uw1 = pygame.image.load(udol1).convert_alpha()
