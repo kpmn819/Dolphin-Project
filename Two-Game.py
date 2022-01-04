@@ -571,8 +571,11 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     return correct
 
 def game2_input():
+    ''' this waits for a port to go low, the slight delay is needed to debounce
+    the input'''
+    
     while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[3]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
-        sleep(.1)
+        sleep(.05)
         if GPIO.input(portList[1])  == GPIO.LOW:
             ans = 1
         if GPIO.input(portList[3])  == GPIO.LOW:
