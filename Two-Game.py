@@ -121,7 +121,7 @@ def shuffle_pics():
 # the timeout decorator wraps this so if user walks away
 # it will reset
 @timeout_decorator.timeout(master_timeout,use_signals=True)
-def show_rules(picture):
+def free_cash(picture):
     ''' called by both games selects if it is a free game or
     if they put in some money sets global variables'''
     # display rules and wait for input
@@ -144,7 +144,8 @@ def show_rules(picture):
     pygame.display.flip()
     
     # Select if this is a paid or free play
-    while GPIO.input(portList2[1]) == GPIO.HIGH and GPIO.input(portList2[2]) == GPIO.HIGH:
+    # forever loop until timeout_decorator kicks in
+    while True:
         sleep(.05)
         #print('in pay detection')
         if GPIO.input(portList2[1]) == GPIO.LOW:
@@ -152,6 +153,7 @@ def show_rules(picture):
             free = True
             win = False
             print('Free Play')
+            break
                 
         if GPIO.input(portList2[2]) == GPIO.LOW:
             print('PLAYBACK SHOULD HAPPEN')
@@ -169,8 +171,11 @@ def show_rules(picture):
             else:
                 win = False
                 print('A Loser')
-           
+            break
+
+
 def game1_intro():
+    ''' displays rules for the dolphin game'''
     white = (255, 255, 255)
     black = (0, 0, 0,)
     red = (255, 50, 50)
@@ -829,9 +834,9 @@ def main():
                 
                 print('Main Program')
                 try:
-                    show_rules(free_donate)
+                    free_cash(bg_dol)
                 except timeout_decorator.TimeoutError:
-                    print('timeout from show_rules')
+                    print('timeout from free_cash')
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
                     
@@ -856,9 +861,9 @@ def main():
                 # make it go
                 # at start donation or free play?
                 try:
-                    show_rules(g2_open_bkg)
+                    free_cash(g2_open_bkg)
                 except timeout_decorator.TimeoutError:
-                    print('timeout from show_rules')
+                    print('timeout from free_cash')
                     GPIO.output(portList3[2], False) # turn off the button lights
                     continue
                 # globals free and win are now set
