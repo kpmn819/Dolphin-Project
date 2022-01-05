@@ -2,7 +2,9 @@
 
 
 # V16 now under GIT control
-# try a push when logged in
+''' special thanks to saltycrane for the timeout_decorator all
+sound effects public domain from freesound.com, photos courtesy
+of Bonehenge.  This is a Frobozz Project'''
 
 # IMPORTS START --------------------------------------------------
 # makes extensive use of pygame to blit the screen
@@ -42,7 +44,7 @@ display_pic = 0
 resp = 0
 free = False # playing for free flag
 win = False # winner flag
-payout = 99 # percentage of winners
+payout = 50 # percentage of winners
 
 image_centerx = 960
 image_centery = 540
@@ -618,18 +620,19 @@ def take_turns():
             pgm_rsp = neg_resp[randrange(len(neg_resp))]
             play_sound('Downer.mp3', .2)
             wrong_count += 1
-        # display currnt score and message
-        score_msg = ('Current Score  '+ str(right_count)+ ' right  '+ str(wrong_count)+' wrong')
-        # clear screen of old score and put up new one 
-        display.blit(g2_open_bkg, (0, 0))
-        font_process(60, score_msg, white, image_centerx, 500)
-        font_process(60, pgm_rsp, white, image_centerx, 600)
-        pygame.display.flip()
-        sleep(2)
+        # display current score and message
+        if turn_no != 4:
+            score_msg = ('Current Score  '+ str(right_count)+ ' right  '+ str(wrong_count)+' wrong')
+            # clear screen of old score and put up new one 
+            display.blit(g2_open_bkg, (0, 0))
+            font_process(60, score_msg, white, image_centerx, 500)
+            font_process(60, pgm_rsp, white, image_centerx, 600)
+            pygame.display.flip()
+            sleep(2)
     return [right_count, wrong_count]        
+# -------------------  GAME 2 CODE END ---------------------------
 
-
-
+# -------------------- SHARED CODE FOR END ----------------------
 def final_display(right_ans, wrong_ans):
     # final score
     score_msg = ('Final Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
@@ -640,6 +643,7 @@ def final_display(right_ans, wrong_ans):
     display.blit(finalscore, (0, 0))
     font_process(80, score_msg, white, image_centerx, 500)
     font_process(60, final_msg, white, image_centerx, 600)
+    pygame.display.flip()
     sleep(1)
     if win:
         font_process(75,'You are a WINNER!!',red, image_centerx, 900)
@@ -661,9 +665,8 @@ def final_display(right_ans, wrong_ans):
     sleep(5)
 
 
-# ----------- END GAME 2 CODE ----------------
 
-# -------------------  GAME 2 CODE END ---------------------------
+
 
 
 # METHODS AND FUNCTIONS END _________________________________________
@@ -749,7 +752,7 @@ yayfile = gpath + 'Yay.mp3'
 # had to convert a couple to mp3, pygame didn't like the wav version
 final_audio = ('0_right.wav','1_right.wav','2_right.mp3','3_right.wav',
                '4_right.mp3','5_right.wav')
-final_vol = (1,1,1,.5,1,1)
+final_vol = (.3,1,1,.5,1,1)
 # now to actually load them same letters this has to be done in two steps
 # first the user pictures
 uw1 = pygame.image.load(udol1).convert_alpha()
@@ -777,16 +780,16 @@ cw9 = pygame.image.load(cdol9).convert_alpha()
 cw10 = pygame.image.load(cdol10).convert_alpha()
 cw11 = pygame.image.load(cdol11).convert_alpha()
 cw12 = pygame.image.load(cdol12).convert_alpha()
-
+# full 1920 x 1080 images for backgrounds
 bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
 g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
 free_donate = pygame.image.load(free_donate_pict).convert_alpha()
 game_choice = pygame.image.load(game_choice_pict).convert_alpha()
 finalscore = pygame.image.load(finalscore_pict).convert_alpha()
+# small arrow with alpha
 blue_arrow = pygame.image.load(b_arro).convert_alpha()
 
-# these lists point to the picture files, there are 5 matching pairs
-# currently they are the same pictures but will be replaced
+
 #endregion
 # game 2 run once ------------------------
 try:
@@ -818,6 +821,8 @@ def main():
         # note init only runs once
         
         while main_loop:
+            ''' here we choose the game and then drop into that game's
+            loops. The timeout_decorator returns to this loop'''
             which_game()
             if game1:
                 print('game one picked')
