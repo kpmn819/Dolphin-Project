@@ -406,12 +406,13 @@ def send_to_screen(challange, rnums, caption):
     display.blit(comp_pic[challange],(840,40)) # Challange pic location
     # display the other pictures from list on bottom
     choicesx = 50
-    choicesy = 700
+    choicesy = 600
     i = 0
     font_process(60, caption, (255,255,255), image_centerx, 400)
     #print('send to screen has rnums as ', str(rnums))
     for items in rnums:
         # use the rnums list to index your_pic list to get the pictures
+        display.blit(blue_arrow, arrow_loc[i])
         display.blit(your_pic[rnums[i]],(choicesx, choicesy))
         i = i + 1
         choicesx = choicesx + 380 # spacing for choices pics
@@ -491,7 +492,7 @@ def get_file(list_file):
                     # this is a 0 based list of lists
                     # access questions_list[q# - 1][column]
                 line_count += 1
-            print(f'Processed {line_count} lines.')
+            #print(f'Processed {line_count} lines.')
             row_count = line_count - 1
             return [questions_list]
     except FileNotFoundError:
