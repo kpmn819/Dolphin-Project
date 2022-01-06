@@ -53,7 +53,7 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
 # only using arrows 0, 2 and 4 for now
-arrow_loc = ((30, 890), (460, 890), (960, 890), (1355, 890), (1750, 890))
+arrow_loc = ((30, 890), (500, 890), (895, 890), (1315, 890), (1750, 890))
 
 # may be used later to select game 1 or 2
 game1 = True
