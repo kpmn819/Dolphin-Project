@@ -527,7 +527,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     white = (255, 255, 255)
     arrow_y = 900
     print('Question is ' + str(questions[rand_pic][0]))
-
+    ans_font = 60
     display.blit(g2_open_bkg, (0, 0))
 
     # now chop up the lines and display question
@@ -537,12 +537,13 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(60, item, white, x, y)
         y = y + 70
+
     # now chop up the lines and display answers left first
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[0]]), 20)
     x = 280
-    y = 500
+    y = 500 # this gets reset each time in case answer is multi line
     for item in parsed_lines:
-        font_process(50, item, white, x, y)
+        font_process(ans_font, item, white, x, y)
         y = y + 70
     display.blit(blue_arrow, (arrow_loc[0])) 
     # middle answer  
@@ -550,7 +551,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     x = 990
     y = 500
     for item in parsed_lines:
-        font_process(50, item, white, x, y)
+        font_process(ans_font, item, white, x, y)
         y = y + 70 
     display.blit(blue_arrow, (arrow_loc[2])) 
     # right most answer   
@@ -558,7 +559,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     x = 1600
     y = 500
     for item in parsed_lines:
-        font_process(50, item, white, x, y)
+        font_process(ans_font, item, white, x, y)
         y = y + 70    
     display.blit(blue_arrow, (arrow_loc[4])) 
     pygame.display.flip()
