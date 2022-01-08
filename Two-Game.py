@@ -2,7 +2,7 @@
 
 
 # V16 now under GIT control
-''' special thanks to saltycrane for the timeout_decorator all
+''' special thanks to saltycrane for the timeout_decorator. All
 sound effects public domain from freesound.com, photos courtesy
 of Bonehenge.  This is a Frobozz Project'''
 
