@@ -179,7 +179,7 @@ def game1_intro():
     white = (255, 255, 255)
     black = (0, 0, 0,)
     red = (255, 50, 50)
-    display.blit(bg_dol, (0, 0))
+    display.blit(g1_bkg, (0, 0))
     greeting = 'Hello Welcome to ID the Dolphin'
     font_process(60, greeting, white, image_centerx, 100)
     pygame.display.flip()
@@ -197,7 +197,7 @@ def game1_intro():
         sleep(2) # allow prev sound to end
     play_sound('pinball-start.mp3', .5)
     sleep(5.5)
-    display.blit(bg_dol, (0, 0))
+    display.blit(g1_bkg, (0, 0))
     pygame.display.flip()
 
 
@@ -299,7 +299,7 @@ def play_loop():
         
 
         # clear screen of old score and put up new one 
-        display.blit(bg_dol, (0, 0))
+        display.blit(g1_bkg, (0, 0))
         font_process(60, score_msg, white, image_centerx, 500)
         font_process(60, pgm_rsp, white, image_centerx, 600)
         pygame.display.flip()
@@ -308,7 +308,7 @@ def play_loop():
         sleep(1)
         # now display just the turn and score no response
         if turn != 5:
-            display.blit(bg_dol, (0, 0))
+            display.blit(g1_bkg, (0, 0))
             font_process(60, score_msg, white, image_centerx, 500)
             pygame.display.flip()
     # =========== Loop End =============  
@@ -528,7 +528,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     arrow_y = 900
     print('Question is ' + str(questions[rand_pic][0]))
     ans_font = 60
-    display.blit(g2_open_bkg, (0, 0))
+    display.blit(g2_bkg, (0, 0))
 
     # now chop up the lines and display question
     parsed_lines = parse_string(str(questions[rand_pic][0]), 30)
@@ -631,7 +631,7 @@ def take_turns():
         if turn_no != 4:
             score_msg = ('Current Score  '+ str(right_count)+ ' right  '+ str(wrong_count)+' wrong')
             # clear screen of old score and put up new one 
-            display.blit(g2_open_bkg, (0, 0))
+            display.blit(g2_bkg, (0, 0))
             font_process(60, score_msg, white, image_centerx, 500)
             font_process(60, pgm_rsp, white, image_centerx, 600)
             pygame.display.flip()
@@ -743,7 +743,7 @@ cdol12 = gpath + '1726b.jpg'
 
 
 
-bg_dolphins = gpath + 'dolphins3.jpg'
+g1_open_pict = gpath + 'game_1.jpg'
 g2_open_pict = gpath + 'game_2.jpg'
 free_donate_pict = gpath + 'free_donate.jpg'
 game_choice_pict = gpath + 'game_choice.jpg'
@@ -788,8 +788,8 @@ cw10 = pygame.image.load(cdol10).convert_alpha()
 cw11 = pygame.image.load(cdol11).convert_alpha()
 cw12 = pygame.image.load(cdol12).convert_alpha()
 # full 1920 x 1080 images for backgrounds
-bg_dol = pygame.image.load(bg_dolphins).convert_alpha()
-g2_open_bkg = pygame.image.load(g2_open_pict).convert_alpha()
+g1_bkg = pygame.image.load(g1_open_pict).convert_alpha()
+g2_bkg = pygame.image.load(g2_open_pict).convert_alpha()
 free_donate = pygame.image.load(free_donate_pict).convert_alpha()
 game_choice = pygame.image.load(game_choice_pict).convert_alpha()
 finalscore = pygame.image.load(finalscore_pict).convert_alpha()
@@ -836,7 +836,7 @@ def main():
                 
                 print('Main Program')
                 try:
-                    free_cash(bg_dol)
+                    free_cash(g1_bkg)
                 except timeout_decorator.TimeoutError:
                     print('timeout from free_cash')
                     GPIO.output(portList3[2], False) # turn off the button lights
@@ -863,7 +863,7 @@ def main():
                 # make it go
                 # at start donation or free play?
                 try:
-                    free_cash(g2_open_bkg)
+                    free_cash(g2_bkg)
                 except timeout_decorator.TimeoutError:
                     print('timeout from free_cash')
                     GPIO.output(portList3[2], False) # turn off the button lights
