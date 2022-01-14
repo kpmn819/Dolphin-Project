@@ -125,11 +125,9 @@ def free_cash(picture):
     ''' called by both games selects if it is a free game or
     if they put in some money sets global variables'''
     # display rules and wait for input
-    # define font colors
     global free
     global win
- 
-    
+     
     display.blit(picture, (0, 0))
     greeting = 'Press Free Play'
     font_process(60, greeting, white, image_centerx, 200)
@@ -350,7 +348,7 @@ def which_pic():
     while True:
         #  find out where the mouse/touch happened and return value
         #  this is an endless loop until right input
-        #  legacy code from touch screen, no longer used
+        '''  legacy code from touch screen, no longer used '''
         event = pygame.event.wait()
         ans = -1
         click_spot = (0, 0)
@@ -409,7 +407,7 @@ def send_to_screen(challange, rnums, caption):
     choicesy = 600
     i = 0
     font_process(60, caption, (255,255,255), image_centerx, 400)
-    #print('send to screen has rnums as ', str(rnums))
+    
     for items in rnums:
         # use the rnums list to index your_pic list to get the pictures
         display.blit(blue_arrow, arrow_loc[i])
@@ -470,7 +468,7 @@ def which_game():
 
 
 # ------------------- GAME 2 CODE START --------------------------
-# ----------- START GAME TWO CODE --------------
+
 def get_file(list_file):
     global row_count
     global file_error
@@ -602,6 +600,7 @@ def game2_input():
 
 @timeout_decorator.timeout(master_timeout,use_signals=True)
 def take_turns():
+    ''' like play_loop for game 1 this is the guts of game 2'''
     right_count = 0
     wrong_count = 0
     GPIO.output(portList3[2], True) # turn on the button lights
@@ -611,8 +610,6 @@ def take_turns():
         # rand_pic points to the index of the question 0 to row_count -1
         screen_order = q_to_screen(rand_pic, questions)
         right_ans = screen_order.index(1) + 1
-        #print('back with this order ' + str(screen_order))
-        #print('right answer is in position '+ str(right_ans))
         # go get answers lots of stuff in this call but it needs
         # all of it
         correct = get_user_ans(rand_pic, right_ans, questions, screen_order)
@@ -745,12 +742,12 @@ cdol12 = gpath + '1726b.jpg'
 
 g1_open_pict = gpath + 'game_1.jpg'
 g2_open_pict = gpath + 'game_2.jpg'
-free_donate_pict = gpath + 'free_donate.jpg'
+#free_donate_pict = gpath + 'free_donate.jpg' #(not used)
 game_choice_pict = gpath + 'game_choice.jpg'
 finalscore_pict = gpath + 'finalscore.jpg'
 # arrows
 r_arro = gpath + 'red_arrow.png'
-y_arro = gpath + 'yello_arrow.png'
+y_arro = gpath + 'yellow_arrow.png'
 b_arro = gpath + 'blue_arrow.png'
 # path to sounds
 awefile = gpath + 'Awe.mp3'
@@ -790,7 +787,7 @@ cw12 = pygame.image.load(cdol12).convert_alpha()
 # full 1920 x 1080 images for backgrounds
 g1_bkg = pygame.image.load(g1_open_pict).convert_alpha()
 g2_bkg = pygame.image.load(g2_open_pict).convert_alpha()
-free_donate = pygame.image.load(free_donate_pict).convert_alpha()
+#free_donate = pygame.image.load(free_donate_pict).convert_alpha() # not used
 game_choice = pygame.image.load(game_choice_pict).convert_alpha()
 finalscore = pygame.image.load(finalscore_pict).convert_alpha()
 # small arrow with alpha
