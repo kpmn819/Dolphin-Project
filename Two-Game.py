@@ -241,6 +241,13 @@ def parse_string(long_string, final_length):
 	# will return any number of lines of final_length
 	return lines_list 
 
+def change_lights(light_config):
+    if light_config == 0:
+         GPIO.output(portList3[2], False) # turn off the button lights  
+    if light_config == 1:
+        GPIO.output(portList3[2], True) # turn on the button lights     
+
+
 # ------------------------- Where all the action happens --------------
 @timeout_decorator.timeout(master_timeout,use_signals=True)
 def play_loop():
@@ -264,7 +271,7 @@ def play_loop():
    
     # use display_pic to put up that pic on top (chalange pic)
     # use rnums to show all pics on bottom (computer pics)
-    GPIO.output(portList3[2], True) # turn on the button lights
+    change_lights(1) # turn on the button lights
 
 
     # ========= Loop Start ============
@@ -422,7 +429,7 @@ def which_game():
     ''' puts up select screen and sets game1 T or F'''
     # needs to light only buttons 1 & 5
     global game1
-    GPIO.output(portList3[2], True) # turn on the button lights
+    change_lights(1) # turn on the button lights
     print('which game will it be? ')
     display.blit(game_choice, (0, 0))
     greeting = 'Please select a game to play'
@@ -457,14 +464,18 @@ def which_game():
     
     pygame.display.flip()
     
-    while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
+    #while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
+    while True:
+    
         # wait for button press
         sleep(.05)
         if GPIO.input(portList[1]) == GPIO.LOW:
             game1 = True
+            break
         if GPIO.input(portList[5]) == GPIO.LOW:
             game1 = False
-    GPIO.output(portList3[2], False) # turn off the button lights   
+            break
+    change_lights(0) # turn off the button lights   
 
 
 # ------------------- GAME 2 CODE START --------------------------
@@ -603,7 +614,7 @@ def take_turns():
     ''' like play_loop for game 1 this is the guts of game 2'''
     right_count = 0
     wrong_count = 0
-    GPIO.output(portList3[2], True) # turn on the button lights
+    change_lights(1) # turn on the button lights
     for turn_no in range(0,5):
         # put up the questions
         rand_pic = q_pics[0][turn_no]
@@ -663,7 +674,7 @@ def final_display(right_ans, wrong_ans):
         font_process(60,'Sorry, you are not a winner this time', (175,175,255), image_centerx, 1000)
 
     pygame.display.flip()
-    GPIO.output(portList3[2], False) # turn off the button lights
+    change_lights(0) # turn off the button lights
 
     #  add delay here
     sleep(5)
@@ -694,7 +705,7 @@ portassign(portList) # main buttons
 portassign(portList2) # free or pay
 portassign(portList3) # output for bell and lights relays
 GPIO.output(portList3[1], False) # no bell
-GPIO.output(portList3[2], False) # no lights
+change_lights(0) # no lights
 
 # for developement uncomment the line below
 #display = pygame.display.set_mode(size)
@@ -836,7 +847,7 @@ def main():
                     free_cash(g1_bkg)
                 except timeout_decorator.TimeoutError:
                     print('timeout from free_cash')
-                    GPIO.output(portList3[2], False) # turn off the button lights
+                    change_lights(0) # turn off the button lights
                     continue
                     
                 
@@ -846,7 +857,7 @@ def main():
                     final_score = play_loop() # this is where all the work is done might want to break it up
                 except timeout_decorator.TimeoutError:
                     print('timeout from play_loop')
-                    GPIO.output(portList3[2], False) # turn off the button lights
+                    change_lights(0) # turn off the button lights
                     continue
 
                 final_display(final_score[0], final_score[1])
@@ -863,14 +874,14 @@ def main():
                     free_cash(g2_bkg)
                 except timeout_decorator.TimeoutError:
                     print('timeout from free_cash')
-                    GPIO.output(portList3[2], False) # turn off the button lights
+                    change_lights(0) # turn off the button lights
                     continue
                 # globals free and win are now set
                 try:
                     final_score = take_turns()
                 except timeout_decorator.TimeoutError:
                     print('timeout from take_turns')
-                    GPIO.output(portList3[2], False) # turn off the button lights
+                    change_lights(0) # turn off the button lights
                     continue
 
                 final_display(final_score[0], final_score[1])
