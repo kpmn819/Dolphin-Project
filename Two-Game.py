@@ -40,6 +40,7 @@ donation = False
 # VARIABLE INITIALIZE START----------------------------------------
 max_pic = 12
 rnums = []
+
 display_pic = 0
 resp = 0
 free = False # playing for free flag
@@ -242,11 +243,12 @@ def parse_string(long_string, final_length):
 	return lines_list 
 
 def change_lights(light_config):
+    # central point to control panel lights
     if light_config == 0:
          GPIO.output(portList3[2], False) # turn off the button lights  
     if light_config == 1:
         GPIO.output(portList3[2], True) # turn on the button lights     
-
+    # may add another config here for just three buttons
 
 # ------------------------- Where all the action happens --------------
 @timeout_decorator.timeout(master_timeout,use_signals=True)
@@ -514,6 +516,7 @@ def get_file(list_file):
 def pick_some(qpicks,rstart,rend):
     '''takes a number and returns list of randoms nums in a range'''
     pics_list = sample(range(rstart, rend), qpicks)
+    print('game2 pics_list :' + str(pics_list))
     return [pics_list]     
 
 def q_to_screen(rand_pick, questions):
@@ -576,9 +579,9 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     # the index below questions is the big list then
     # [rand_pic] pics which of the questions and
     # [screen_order[X]] points the the reordered answers
-    print('Left 1 =' + str(questions[rand_pic][screen_order[0]]))
-    print('Mid 2 =' + str(questions[rand_pic][screen_order[1]]))
-    print('Rgt 3 =' + str(questions[rand_pic][screen_order[2]]))
+    #print('Left 1 =' + str(questions[rand_pic][screen_order[0]]))
+    #print('Mid 2 =' + str(questions[rand_pic][screen_order[1]]))
+    #print('Rgt 3 =' + str(questions[rand_pic][screen_order[2]]))
     #user_ans = input('Select 1-3 ')
     user_ans = game2_input()
     # code below to be replaced with button input
@@ -614,6 +617,7 @@ def take_turns():
     ''' like play_loop for game 1 this is the guts of game 2'''
     right_count = 0
     wrong_count = 0
+    q_pics = pick_some(5, 0, row_count -1)
     change_lights(1) # turn on the button lights
     for turn_no in range(0,5):
         # put up the questions
@@ -818,7 +822,7 @@ print('there are ' + str(row_count) + ' rows')
 # pick 5 questions out of how many are in file
 # this is a list of questions to be asked
 # just need to do it once per game
-q_pics = pick_some(5, 0, row_count -1)
+# q_pics = pick_some(5, 0, row_count -1)
 # whatever is in the 1 slot is correct pick
 turn_no = 0
 # game 2 run once end --------------------
@@ -867,6 +871,7 @@ def main():
 
             else:
                 print('picked game 2')
+                
             
                 # make it go
                 # at start donation or free play?
