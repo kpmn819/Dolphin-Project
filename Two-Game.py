@@ -74,7 +74,7 @@ portList = [1,4,17,27,22,5,6]
 # Port assignments 2 [in,13-Free,26-Pay]
 portList2 = [1,13,26]
 # Port assignments 3 [out, 23-Bell, 16 Lights]
-portList3 = [0, 23, 16]
+portList3 = [0, 23, 16, 24, 25, 12, 18, 14]
 # GPIO PORT END ___________________________________________________
 
 # DEFINE CLASES START ---------------------------------------------
@@ -231,6 +231,8 @@ def font_process(size, message, color, x, y):
     display.blit(render_message, render_msg_rect)
     # no flip here up to the caller
 
+
+# ////////////////////// SMALL UTILITIES \\\\\\\\\\\\\\\\\\\\\
 def play_sound(sfile, vol):
     pygame.mixer.music.set_volume(vol)
     pygame.mixer.music.load(gpath + sfile)
@@ -245,10 +247,31 @@ def parse_string(long_string, final_length):
 def change_lights(light_config):
     # central point to control panel lights
     if light_config == 0:
-         GPIO.output(portList3[2], False) # turn off the button lights  
+        #GPIO.output(portList3[2], True) # turn on the button lights
+        #GPIO.output(portList3[7], True) # TEST UART PORT 
+        ports_on = [portList3[3], portList3[4]]
+        ports_off =[portList3[2], portList3[7]] 
+        drive_lights(ports_on, ports_off)
+
     if light_config == 1:
-        GPIO.output(portList3[2], True) # turn on the button lights     
+        #GPIO.output(portList3[2], False) # turn off the button lights 
+        #GPIO.output(portList3[7], False) # TEST UART PORT  
+        ports_on = [portList3[2], portList3[7]]
+        ports_off =[portList3[3], portList3[4]]
+        drive_lights(ports_on, ports_off)
+
+
     # may add another config here for just three buttons
+def drive_lights(ports_on, ports_off):
+    # get two lists of ports to turn on or off
+    for items in ports_on:
+        GPIO.output(items, True)
+    for items in ports_off:
+        GPIO.output(items, False)
+    
+
+# ////////////////////// SMALL UTILITIES \\\\\\\\\\\\\\\\\\\\\
+
 
 # ------------------------- Where all the action happens --------------
 @timeout_decorator.timeout(master_timeout,use_signals=True)
@@ -538,7 +561,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     # display stuff
     white = (255, 255, 255)
     arrow_y = 900
-    print('Question is ' + str(questions[rand_pic][0]))
+    # print('Question is ' + str(questions[rand_pic][0]))
     ans_font = 60
     display.blit(g2_bkg, (0, 0))
 
@@ -552,7 +575,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
 
     # now chop up the lines and display answers left first
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[0]]), 20)
-    x = 280
+    x = 320
     y = 500 # this gets reset each time in case answer is multi line
     for item in parsed_lines:
         font_process(ans_font, item, white, x, y)
