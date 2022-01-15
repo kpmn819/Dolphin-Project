@@ -617,6 +617,7 @@ def take_turns():
     ''' like play_loop for game 1 this is the guts of game 2'''
     right_count = 0
     wrong_count = 0
+    # get random q & a for this round
     q_pics = pick_some(5, 0, row_count -1)
     change_lights(1) # turn on the button lights
     for turn_no in range(0,5):
@@ -678,7 +679,7 @@ def final_display(right_ans, wrong_ans):
         font_process(60,'Sorry, you are not a winner this time', (175,175,255), image_centerx, 1000)
 
     pygame.display.flip()
-    change_lights(0) # turn off the button lights
+    # change_lights(0) # turn off the button lights
 
     #  add delay here
     sleep(5)
