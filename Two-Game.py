@@ -73,7 +73,8 @@ master_timeout = 300
 portList = [1,4,17,27,22,5,6]
 # Port assignments 2 [in,13-Free,26-Pay]
 portList2 = [1,13,26]
-# Port assignments 3 [out, 23-Bell, 16 Lights]
+# Port assignments 3 [out, 23-Bell, 16 Light Relay, 24 B1,
+#                     25 B2, 12 B3, 18 B4, 14 B5]
 portList3 = [0, 23, 16, 24, 25, 12, 18, 14]
 # GPIO PORT END ___________________________________________________
 
@@ -245,28 +246,43 @@ def parse_string(long_string, final_length):
 	return lines_list 
 
 def change_lights(light_config):
+    '''allows for any configuration of the light as they
+       can be individually controlled'''
     # central point to control panel lights
-    if light_config == 0:
-        #GPIO.output(portList3[2], True) # turn on the button lights
-        #GPIO.output(portList3[7], True) # TEST UART PORT 
-        ports_on = [portList3[3], portList3[4]]
-        ports_off =[portList3[2], portList3[7]] 
-        drive_lights(ports_on, ports_off)
+    # portList3 = [I/O, [1]-Bell, [2]Light Relay, [3] B1,
+    #             [4] B2, [5] B3, [6] B4, [7] B5]
+    # For buttons if the port is high light is on
+    # For Free/Donate port high = off
 
-    if light_config == 1:
-        #GPIO.output(portList3[2], False) # turn off the button lights 
-        #GPIO.output(portList3[7], False) # TEST UART PORT  
-        ports_on = [portList3[2], portList3[7]]
-        ports_off =[portList3[3], portList3[4]]
-        drive_lights(ports_on, ports_off)
+    if light_config == 0: # Free/Donate on Buttons off
+        ports_high = []
+        ports_low =[portList3[2], portList3[3],portList3[4], portList3[5],
+        portList3[6], portList3[7]] 
+        drive_lights(ports_high, ports_low)
+
+    if light_config == 1: # 5 button lights on
+        ports_high = [portList3[2], portList3[3],portList3[4], portList3[5],
+        portList3[6], portList3[7]] 
+        ports_low = []
+        drive_lights(ports_high, ports_low)
+    
+    if light_config == 2: # Free/Donate off, Buttons 1, 5 on
+        ports_high = [portList3[2], portList3[3], portList3[7]]
+        ports_low =  [portList3[4], portList3[5], portList3[6]]
+        drive_lights(ports_high, ports_low)
+
+    if light_config == 3: # Free/Donate off, Buttons 1, 3, 5 on
+        ports_high = [portList3[2], portList3[3], portList3[5], portList3[7]]
+        ports_low =  [portList3[4], portList3[6]]
+        drive_lights(ports_high, ports_low)
 
 
     # may add another config here for just three buttons
-def drive_lights(ports_on, ports_off):
+def drive_lights(ports_high, ports_low):
     # get two lists of ports to turn on or off
-    for items in ports_on:
+    for items in ports_high:
         GPIO.output(items, True)
-    for items in ports_off:
+    for items in ports_low:
         GPIO.output(items, False)
     
 
