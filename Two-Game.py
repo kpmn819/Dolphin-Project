@@ -470,7 +470,7 @@ def which_game():
     ''' puts up select screen and sets game1 T or F'''
     # needs to light only buttons 1 & 5
     global game1
-    change_lights(1) # turn on the button lights
+    change_lights(2) # turn on just 1 and 5
     print('which game will it be? ')
     display.blit(game_choice, (0, 0))
     greeting = 'Please select a game to play'
@@ -658,7 +658,7 @@ def take_turns():
     wrong_count = 0
     # get random q & a for this round
     q_pics = pick_some(5, 0, row_count -1)
-    change_lights(1) # turn on the button lights
+    change_lights(3) # turn on 1, 3 and 5
     for turn_no in range(0,5):
         # put up the questions
         rand_pic = q_pics[0][turn_no]
