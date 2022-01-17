@@ -252,28 +252,28 @@ def change_lights(light_config):
     # portList3 = [I/O, [1]-Bell, [2]Light Relay, [3] B1,
     #             [4] B2, [5] B3, [6] B4, [7] B5]
     # For buttons if the port is high light is on
-    # For Free/Donate port high = off
+    # For Free/Donate port high = on
 
     if light_config == 0: # Free/Donate on Buttons off
-        ports_high = []
-        ports_low =[portList3[2], portList3[3],portList3[4], portList3[5],
+        ports_high = [portList3[2], ]
+        ports_low =[portList3[3],portList3[4], portList3[5],
         portList3[6], portList3[7]] 
         drive_lights(ports_high, ports_low)
 
     if light_config == 1: # 5 button lights on
-        ports_high = [portList3[2], portList3[3],portList3[4], portList3[5],
+        ports_high = [portList3[3],portList3[4], portList3[5],
         portList3[6], portList3[7]] 
-        ports_low = []
+        ports_low = [portList3[2]]
         drive_lights(ports_high, ports_low)
     
     if light_config == 2: # Free/Donate off, Buttons 1, 5 on
-        ports_high = [portList3[2], portList3[3], portList3[7]]
-        ports_low =  [portList3[4], portList3[5], portList3[6]]
+        ports_high = [portList3[3], portList3[7]]
+        ports_low =  [portList3[2], portList3[4], portList3[5], portList3[6]]
         drive_lights(ports_high, ports_low)
 
     if light_config == 3: # Free/Donate off, Buttons 1, 3, 5 on
-        ports_high = [portList3[2], portList3[3], portList3[5], portList3[7]]
-        ports_low =  [portList3[4], portList3[6]]
+        ports_high = [portList3[3], portList3[5], portList3[7]]
+        ports_low =  [portList3[2], portList3[4], portList3[6]]
         drive_lights(ports_high, ports_low)
 
 
