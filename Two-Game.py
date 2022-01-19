@@ -54,7 +54,7 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
 # only using arrows 0, 2 and 4 for now
-arrow_loc = ((30, 890), (500, 890), (895, 890), (1315, 890), (1750, 890))
+arrow_loc = ((30, 890), (462, 890), (895, 890), (1327, 890), (1760, 890))
 
 # may be used later to select game 1 or 2
 game1 = True
@@ -459,7 +459,7 @@ def send_to_screen(challange, rnums, caption):
     for items in rnums:
         # use the rnums list to index your_pic list to get the pictures
         display.blit(blue_arrow, arrow_loc[i])
-        display.blit(your_pic[rnums[i]],(choicesx, choicesy))
+        display.blit(your_pic[items],(choicesx, choicesy))
         i = i + 1
         choicesx = choicesx + 380 # spacing for choices pics
 
