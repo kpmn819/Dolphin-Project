@@ -284,6 +284,11 @@ def drive_lights(ports_high, ports_low):
         GPIO.output(items, True)
     for items in ports_low:
         GPIO.output(items, False)
+
+def reset_pressed(port):
+    print('Shutdown Button Pressed')
+    GPIO.cleanup()
+    sys.exit()
     
 
 # ////////////////////// SMALL UTILITIES \\\\\\\\\\\\\\\\\\\\\
@@ -336,14 +341,16 @@ def play_loop():
             right_ans = right_ans + 1
             play_sound('Quick-win.mp3', .3)
             print(pgm_rsp)
+            show_glow(rnums.index(display_pic), resp)
         else:
             pgm_rsp = neg_resp[randrange(len(neg_resp))]
             print(pgm_rsp)
             wrong_ans = wrong_ans + 1
             play_sound('Downer.mp3', .2)
-        score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
-        
+            show_glow(rnums.index(display_pic), resp)
 
+        
+        score_msg = ('Current Score  '+ str(right_ans)+ ' right  '+ str(wrong_ans)+' wrong')
         # clear screen of old score and put up new one 
         display.blit(g1_bkg, (0, 0))
         font_process(60, score_msg, white, image_centerx, 500)
@@ -362,6 +369,20 @@ def play_loop():
     return [right_ans, wrong_ans]
     # final score
     
+def show_glow(green_pos, red_pos):
+    # gets the green and red positions and blits screen
+    print('show_glow has green/red' + str(green_pos) + '/' + str(red_pos))
+    start_x = 30
+    glow_posx = [start_x, start_x + 380, start_x + 760, start_x + 1140, start_x + 1520]
+    glow_posy = 570
+    # display green alway
+    display.blit(green_glow, (glow_posx[green_pos], glow_posy))
+    if green_pos != red_pos:
+        #display red also
+        display.blit(red_glow, (glow_posx[red_pos], glow_posy))
+    pygame.display.flip()
+    sleep(2)
+
 
 def which_pic2():
     '''this version uses the push buttons instead of touch screen
@@ -804,6 +825,9 @@ finalscore_pict = gpath + 'finalscore.jpg'
 r_arro = gpath + 'red_arrow.png'
 y_arro = gpath + 'yellow_arrow.png'
 b_arro = gpath + 'blue_arrow.png'
+# glows
+g_gl = gpath + 'g-glow.png'
+r_gl = gpath + 'r-glow.png'
 # path to sounds
 awefile = gpath + 'Awe.mp3'
 yayfile = gpath + 'Yay.mp3'
@@ -848,6 +872,9 @@ finalscore = pygame.image.load(finalscore_pict).convert_alpha()
 # small arrow with alpha
 blue_arrow = pygame.image.load(b_arro).convert_alpha()
 
+green_glow = pygame.image.load(g_gl).convert_alpha()
+red_glow = pygame.image.load(r_gl).convert_alpha()
+
 
 #endregion
 # game 2 run once ------------------------
@@ -866,7 +893,8 @@ print('there are ' + str(row_count) + ' rows')
 # whatever is in the 1 slot is correct pick
 turn_no = 0
 # game 2 run once end --------------------
-
+# hardware reset on port 6
+GPIO.add_event_detect(6, GPIO.FALLING, callback = reset_pressed)
 
 # INITIALIZE RUN ONCE CODE END _________________________________________
 
