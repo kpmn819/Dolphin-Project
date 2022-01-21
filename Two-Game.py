@@ -904,12 +904,13 @@ blue_arrow = pygame.image.load(b_arro).convert_alpha()
 
 green_glow = pygame.image.load(g_gl).convert_alpha()
 red_glow = pygame.image.load(r_gl).convert_alpha()
-
-
+# DANGER for some reason this ran fine in vscode without
+# defining this path but crashed on deployment
+ppath = '/home/pi/MyCode/'
 #endregion
 # game 2 run once ------------------------
 try:
-    [questions] = get_file(list_file)
+    [questions] = get_file(ppath + list_file)
 except:
     print('FILE IS MISSING')
     #once this is inside a loop ADD BREAK 
