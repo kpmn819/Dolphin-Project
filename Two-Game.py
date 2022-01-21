@@ -609,9 +609,12 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     for item in parsed_lines:
         font_process(60, item, white, x, y)
         y = y + 70
+    # puts all parsed answers in list for highlighting
+    all_answers_parsed = []
 
     # now chop up the lines and display answers left first
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[0]]), 20)
+    all_answers_parsed.append(parsed_lines)
     x = 320
     y = 500 # this gets reset each time in case answer is multi line
     for item in parsed_lines:
@@ -620,6 +623,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     display.blit(blue_arrow, (arrow_loc[0])) 
     # middle answer  
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[1]]), 20)
+    all_answers_parsed.append(parsed_lines)
     x = 990
     y = 500
     for item in parsed_lines:
@@ -628,6 +632,7 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     display.blit(blue_arrow, (arrow_loc[2])) 
     # right most answer   
     parsed_lines = parse_string(str(questions[rand_pic][screen_order[2]]), 20)
+    all_answers_parsed.append(parsed_lines)
     x = 1600
     y = 500
     for item in parsed_lines:
@@ -639,17 +644,42 @@ def get_user_ans(rand_pic, right_ans, questions, screen_order):
     # the index below questions is the big list then
     # [rand_pic] pics which of the questions and
     # [screen_order[X]] points the the reordered answers
-    #print('Left 1 =' + str(questions[rand_pic][screen_order[0]]))
-    #print('Mid 2 =' + str(questions[rand_pic][screen_order[1]]))
-    #print('Rgt 3 =' + str(questions[rand_pic][screen_order[2]]))
     #user_ans = input('Select 1-3 ')
     user_ans = game2_input()
     # code below to be replaced with button input
     if user_ans == right_ans:
         correct = True
+        play_sound('Quick-win.mp3', .3)
+        show_answer(all_answers_parsed, user_ans, right_ans, ans_font)
     else:
         correct = False
+        play_sound('Downer.mp3', .2)
+        show_answer(all_answers_parsed, user_ans, right_ans, ans_font)
     return correct
+
+
+def show_answer(all_answers, user_ans, right_ans, ans_font):
+    ''' reblits text in red and green'''
+    red = (255, 0, 0)
+    green = (0, 255, 0)
+    ans_xlocate = [320, 990, 1600]
+    y = 500
+    # first always blit the green answer
+    for item in all_answers[right_ans - 1]:
+        font_process(ans_font, item, green, ans_xlocate[right_ans -1], y)
+        y = y + 70  
+    y = 500
+    # if they got it wrong put up the red text
+    if user_ans != right_ans:
+        for item in all_answers[user_ans - 1]:
+            font_process(ans_font, item, red, ans_xlocate[user_ans -1], y)
+            y = y + 70  
+
+    pygame.display.flip()
+
+    sleep(2)
+    
+
 
 def game2_input():
     ''' this waits for a port to go low, the slight delay is needed to 
@@ -693,12 +723,12 @@ def take_turns():
         if correct:
             print('got it')
             pgm_rsp = pos_resp[randrange(len(pos_resp))]
-            play_sound('Quick-win.mp3', .3)
+            #play_sound('Quick-win.mp3', .3)
             right_count += 1
         else:
             print('no such luck')
             pgm_rsp = neg_resp[randrange(len(neg_resp))]
-            play_sound('Downer.mp3', .2)
+            #play_sound('Downer.mp3', .2)
             wrong_count += 1
         # display current score and message
         if turn_no != 4:
