@@ -537,6 +537,10 @@ def which_game():
         if GPIO.input(portList[5]) == GPIO.LOW:
             game1 = False
             break
+        event = pygame.event.poll()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print('got the mouse')
+            reset_pressed(6)
     change_lights(0) # turn off the button lights   
 
 
