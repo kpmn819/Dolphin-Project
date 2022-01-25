@@ -712,7 +712,7 @@ def take_turns():
     right_count = 0
     wrong_count = 0
     # get random q & a for this round
-    q_pics = pick_some(5, 0, row_count -1)
+    q_pics = pick_some(5, 0, row_count )
     change_lights(3) # turn on 1, 3 and 5
     for turn_no in range(0,5):
         # put up the questions
@@ -930,6 +930,7 @@ turn_no = 0
 # game 2 run once end --------------------
 # hardware reset on port 6
 GPIO.add_event_detect(6, GPIO.FALLING, callback = reset_pressed)
+pygame.mouse.set_visible(False) # kill the cursor
 
 # INITIALIZE RUN ONCE CODE END _________________________________________
 
