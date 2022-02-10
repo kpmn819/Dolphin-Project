@@ -53,10 +53,10 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
-# only using arrows 0, 2 and 4 for now
-arrow_loc = ((30, 890), (462, 890), (895, 890), (1327, 890), (1760, 890))
+# blit location for arrows used throughout
+arrow_loc = ((15, 890), (452, 890), (895, 890), (1337, 890), (1775, 890))
 
-# may be used later to select game 1 or 2
+# global var that gets set by which_game
 game1 = True
 
 pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
@@ -187,8 +187,7 @@ def game1_intro():
 
     info = 'We can identify individuals by their dorsal fin shape'
     font_process(50, info, white, image_centerx, 200)
-    #pygame.display.flip()
-    # sleep(.5)
+    
 
     inst = 'See if you can match one on the bottom row to the top picture'
     font_process(50, inst, white, image_centerx, 300)
@@ -277,7 +276,6 @@ def change_lights(light_config):
         drive_lights(ports_high, ports_low)
 
 
-    # may add another config here for just three buttons
 def drive_lights(ports_high, ports_low):
     # get two lists of ports to turn on or off
     for items in ports_high:
@@ -526,7 +524,7 @@ def which_game():
     
     pygame.display.flip()
     
-    #while GPIO.input(portList[1]) == GPIO.HIGH and GPIO.input(portList[5]) == GPIO.HIGH:
+    # forever polling loop
     while True:
     
         # wait for button press
