@@ -63,7 +63,7 @@ pos_resp =['Correct','Got it, Nice','Right','Good Pick','Way to go','On a roll']
 neg_resp =['Sorry','Nope','Not that one','Too bad','Gotcha','Maybe next time']
 final_resp =['Better Try Again','Keep Working at it','Got a Couple','Pretty Good','Excellent Nice Job','100% Wow!']
 # set the delay for reset if they walk away
-master_timeout = 300
+MASTER_TIMEOUT = 300
 # VARIABLE INITIALIZE END _________________________________________
 
 # GPIO PORTS START ------------------------------------------------
@@ -122,7 +122,7 @@ def shuffle_pics():
 
 # the timeout decorator wraps this so if user walks away
 # it will reset
-@timeout_decorator.timeout(master_timeout,use_signals=True)
+@timeout_decorator.timeout(MASTER_TIMEOUT,use_signals=True)
 def free_cash(picture):
     ''' called by both games selects if it is a free game or
     if they put in some money sets global variables'''
@@ -293,7 +293,7 @@ def reset_pressed(port):
 
 
 # ------------------------- Where all the action happens --------------
-@timeout_decorator.timeout(master_timeout,use_signals=True)
+@timeout_decorator.timeout(MASTER_TIMEOUT,use_signals=True)
 def play_loop():
     '''this is the big kahona it calls send_to_screen that puts up
     the pictures, which_pic2 that waits for a button press and
@@ -704,7 +704,7 @@ def game2_input():
 
 # timer decorator
 
-@timeout_decorator.timeout(master_timeout,use_signals=True)
+@timeout_decorator.timeout(MASTER_TIMEOUT,use_signals=True)
 def take_turns():
     ''' like play_loop for game 1 this is the guts of game 2'''
     right_count = 0

@@ -1,10 +1,12 @@
 # Youtube Link: https://www.youtube.com/watch?v=PgLjwl6Br0k
 
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+from tkinter import DISABLED, IntVar, filedialog, messagebox, ttk
 import csv
 import os
+from tkinter.font import NORMAL
 import pandas as pd
+
 
 #file_path = os.getcwd() + '/MyCode/qna_pool.csv'
 file_path = '/home/pi/MyCode/qna_pool.csv'
@@ -31,24 +33,33 @@ entry_frame.place(height=100, width=1000, rely=0.65, relx=0.15)
 # Buttons
 button_rely = 0.4
 button2 = tk.Button(file_frame, text="Load File", command=lambda: Load_excel_data())
-button2.place(rely=button_rely, relx=0.05)
+button2.place(rely=button_rely, relx= 0.02)
 
 button1 = tk.Button(file_frame, text="Save File", command=lambda: save_file())
-button1.place(rely=button_rely, relx=0.17)
+button1.place(rely=button_rely, relx= 0.12)
+button1['state'] = tk.DISABLED # cause auto save is on
 
 button3 = tk.Button(file_frame, text="Update Question", command=lambda: update_tree())
-button3.place(rely=button_rely, relx=0.30)
+button3.place(rely=button_rely, relx= 0.24)
 
 button4 = tk.Button(file_frame, text="Add Question", command=lambda: add_question())
-button4.place(rely=button_rely, relx=0.50)
+button4.place(rely=button_rely, relx= 0.40)
 
 button5 = tk.Button(file_frame, text="Delete Question", command=lambda: delete_question())
-button5.place(rely=button_rely, relx=0.70)
+button5.place(rely=button_rely, relx= 0.55)
+
+button6 = tk.Button(file_frame, text="Clear Entries", command=lambda: clear_entries())
+button6.place(rely=button_rely, relx= 0.72)
+
+auto = IntVar()
+# check box
+t1 = tk.Checkbutton(file_frame, text='Auto Save', variable=auto, onvalue=1, offvalue=0, command=lambda: auto_save())
+t1.pack()
+t1.select()
 
 # The file/file path text
 label_file = ttk.Label(file_frame, text="qna_pool.csv")
 label_file.place(rely=0, relx=0)
-
 
 
 # place edit fields
@@ -124,6 +135,15 @@ def Load_excel_data():
         # https://docs.python.org/3/library/tkinter.ttk.html#tkinter.ttk.Treeview.insert
     return None
 
+def auto_save():
+    if auto.get():
+        button1['state'] = tk.DISABLED
+    else:
+        button1['state'] = tk.NORMAL
+
+ 
+    print('auto value '+ str(auto.get()))
+
 def save_file():
     print('saving file')
     #csv_file = open("qna_pool.csv", "w")
@@ -147,15 +167,22 @@ def save_file():
     csv_file.close
 
 def add_question():
+    blanks = no_blanks()
+    if blanks:
+        print('blanks not allowed')
+        messagebox.showerror('Blank Entry', 'Please enter data in blank field')
+        return
     tv1.insert(parent='', index='end', text='', values=(qu_entry.get(), ra_entry.get(), wa_entry.get(), wb_entry.get()))
     clear_entries()
-    save_file()
+    if auto.get():
+        save_file()
 
 def delete_question():
     #print(str(tv1.focus()))
     tv1.delete(str(tv1.focus()))
     clear_entries()
-    save_file()
+    if auto.get():
+        save_file()
 
 def clear_data():
     tv1.delete(*tv1.get_children())
@@ -192,11 +219,17 @@ def select_data(e):
 def update_tree():
     print('this will update the tree entries')
     no_commas() # make sure there are no commas
-    # Grab the record number
+    # Don't let them get away with blanks
+    blanks = no_blanks()
+    if blanks:
+        print('blanks not allowed')
+        messagebox.showerror('Blank Entry', 'Please enter data in blank field')
+        return
     selected = tv1.focus()
     # Update record
     tv1.item(selected, text="", values=(qu_entry.get(), ra_entry.get(), wa_entry.get(), wb_entry.get(),))
-    save_file()
+    if auto.get():
+        save_file()
 
 def no_commas():
     # filter out commas from entry boxes
@@ -223,7 +256,18 @@ def no_commas():
     if wb_org != wb_nc:
         wb_entry.delete(0, tk.END)
         wb_entry.insert(0, wb_nc)
-    
+
+def no_blanks():
+    blanks = False
+    if qu_entry.get() == '':
+        blanks = True
+    if ra_entry.get() == '':
+        blanks = True
+    if wa_entry.get() == '':
+        blanks = True
+    if wb_entry.get() == '':
+        blanks = True
+    return blanks   
 
 tv1.bind("<ButtonRelease-1>", select_data)
 
