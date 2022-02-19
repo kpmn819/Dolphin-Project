@@ -323,7 +323,7 @@ def play_loop():
         #shuffle_pics()
         
         display_pic = display_pics[turn]  # picks a new one each turn
-        caption = 'Turn Number ' + str(turn + 1)
+        caption = 'Match this Fin: Chance # ' + str(turn + 1)
         send_to_screen(display_pic, rnums, caption)  # put up the challenge screen
 
         #  go get user response
@@ -495,13 +495,13 @@ def which_game():
     greeting = 'Please select a game to play'
     font_process(80, greeting, white, image_centerx, 300)
     # first the left side
-    greeting = 'Identify the Dolphin'
+    greeting = 'Photo-ID Challenge'
     x = 430
     y = 600
     font_process(70, greeting, white, x, y)
     # chop these up
     y = y + 90
-    greeting = 'See if you can tell which fins go together'
+    greeting = 'See if you can match dolphin dorsal fins'
     parsed_lines = parse_string(greeting, 30)
     for item in parsed_lines:
         font_process(60, item, white, x, y)
