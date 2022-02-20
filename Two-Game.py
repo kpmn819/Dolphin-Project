@@ -370,7 +370,7 @@ def play_loop():
 def show_glow(green_pos, red_pos):
     # gets the green and red positions and blits screen
     print('show_glow has green/red' + str(green_pos) + '/' + str(red_pos))
-    start_x = 30
+    start_x = 24
     glow_posx = [start_x, start_x + 380, start_x + 760, start_x + 1140, start_x + 1520]
     glow_posy = 570
     # display green alway
