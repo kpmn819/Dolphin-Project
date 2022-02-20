@@ -468,6 +468,7 @@ def send_to_screen(challange, rnums, caption):
     # enable the line below for easier testing
     #comp_pic = [uw1, uw2, uw3, uw4, uw5, uw6, uw7, uw8, uw9, uw10, uw11, uw12]
     # display the challenge pic
+    pygame.draw.rect(display, (128,128,255, 20), (815,16,350,350))
     display.blit(comp_pic[challange],(840,40)) # Challange pic location
     # display the other pictures from list on bottom
     choicesx = 50
