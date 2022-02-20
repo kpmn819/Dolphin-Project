@@ -481,6 +481,7 @@ def send_to_screen(challange, rnums, caption):
     for items in rnums:
         # use the rnums list to index your_pic list to get the pictures
         display.blit(blue_arrow, arrow_loc[i])
+        display.blit(gray_glow,(choicesx - 38, choicesy - 38)) # Gray background
         display.blit(your_pic[items],(choicesx, choicesy))
         i = i + 1
         choicesx = choicesx + 380 # spacing for choices pics
